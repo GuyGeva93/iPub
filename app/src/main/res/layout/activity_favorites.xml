@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".FavoritesActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+<!--        <ImageView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:src="@drawable/favoritetextimg"-->
+<!--            android:background="@color/colorPrimary"-->
+<!--            />-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="המועדפים שלי"
+            android:gravity="center"
+            android:textSize="35sp"
+            android:textColor="#ffff"
+            android:background="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/fav_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8" />
+
+    <!--    footer-->
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:weightSum="3"
+
+        >
+
+        <TextView
+            android:id="@+id/favorites_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/favorites_icon"
+            android:paddingTop="15dp"
+            android:text="המועדפים שלי"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
+
+
+        <TextView
+            android:id="@+id/home_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/home_icon"
+            android:paddingTop="15dp"
+            android:text="מסך ראשי"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
+
+        <TextView
+            android:id="@+id/report_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/mistake_icon"
+            android:paddingTop="15dp"
+            android:text="דווח על טעות"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
+
+    </LinearLayout>
+
+</LinearLayout>

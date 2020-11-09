@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "384086390544",
+    "firebase_url": "https://ipub-b0b26.firebaseio.com",
+    "project_id": "ipub-b0b26",
+    "storage_bucket": "ipub-b0b26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384086390544:android:50440bb5a416c2b34b9795",
+        "android_client_info": {
+          "package_name": "com.example.ipub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384086390544-khiicjuvthfaa83uro1oeld4vuiau0er.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAao1jF50HG-CyEoJiNyB0eQA0s6tCRoH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384086390544-khiicjuvthfaa83uro1oeld4vuiau0er.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+
+    tools:context=".ReportActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="דיווח על טעות"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.168"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.083" />
+
+            <EditText
+                android:id="@+id/report_name"
+                android:layout_width="218dp"
+                android:layout_height="34dp"
+                android:background="@drawable/input_field"
+                android:ems="10"
+                android:hint="שם מלא"
+                android:inputType="textPersonName"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.238"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintVertical_bias="0.06" />
+
+            <EditText
+                android:id="@+id/report_subject"
+                android:layout_width="218dp"
+                android:layout_height="34dp"
+                android:background="@drawable/input_field"
+                android:ems="10"
+                android:hint="נושא"
+                android:inputType="textPersonName"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.238"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintVertical_bias="0.205" />
+
+            <EditText
+                android:id="@+id/report_message"
+                android:layout_width="318dp"
+                android:layout_height="239dp"
+                android:background="@drawable/input_field"
+                android:ems="10"
+                android:gravity="right"
+                android:hint="תיאור הבעיה"
+                android:inputType="textPersonName"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.494"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/report_subject"
+                app:layout_constraintVertical_bias="0.181" />
+
+            <Button
+                android:id="@+id/report_send_btn"
+                android:layout_width="98dp"
+                android:layout_height="44dp"
+                android:background="@drawable/button_send"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="שלח"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.466"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/report_message"
+                app:layout_constraintVertical_bias="0.449" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <!--    footer-->
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/favorites_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/favorites_icon"
+            android:paddingTop="15dp"
+            android:text="המועדפים שלי"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
+
+
+        <TextView
+            android:id="@+id/home_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/home_icon"
+            android:paddingTop="15dp"
+            android:text="מסך ראשי"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
+
+        <TextView
+            android:id="@+id/report_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableTop="@drawable/mistake_icon"
+            android:paddingTop="15dp"
+            android:text="דווח על טעות"
+            android:textAlignment="center"
+            android:textColor="#ffff" />
+    </LinearLayout>
+
+</LinearLayout>
