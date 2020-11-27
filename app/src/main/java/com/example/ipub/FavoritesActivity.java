@@ -128,6 +128,17 @@ public class FavoritesActivity extends AppCompatActivity {
 
         }
 
+        for (final Pub pub : FavoritesList) {
+            pub.setBtnRating(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(FavoritesActivity.this, Ratings.class);
+                    intent.putExtra("pub_name", pub.getTitleName());
+                    startActivity(intent);
+                }
+            });
+        }
+
         // set on click event listener to list view
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

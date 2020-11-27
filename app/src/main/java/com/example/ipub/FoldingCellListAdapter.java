@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.ramotion.foldingcell.FoldingCell;
@@ -72,13 +73,12 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             LayoutInflater vi = LayoutInflater.from(getContext());
             cell = (FoldingCell) vi.inflate(R.layout.cell, parent, false);
             // binding view parts to view holder
-            viewHolder.TitleName = cell.findViewById(R.id.title_name);
+            viewHolder.TitleImage = cell.findViewById(R.id.title_image);
             viewHolder.Name = cell.findViewById(R.id.pub_name);
-            viewHolder.Kosher = cell.findViewById(R.id.title_kosher);
             viewHolder.distance = cell.findViewById(R.id.title_distance);
             viewHolder.Address = cell.findViewById(R.id.pub_address);
             viewHolder.Telephone = cell.findViewById(R.id.title_Phone);
-            viewHolder.Website = cell.findViewById(R.id.title_Website);
+            viewHolder.Kosher = cell.findViewById(R.id.title_kosher);
             viewHolder.contentPubName = cell.findViewById(R.id.content_headline_pubName);
             viewHolder.contentMainImage = cell.findViewById(R.id.content_head_image);
 
@@ -87,6 +87,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.btnGoToWebsite =cell.findViewById(R.id.btn_content_website);
             viewHolder.btnNavigateToPub = cell.findViewById(R.id.btn_content_navigate);
             viewHolder.btnAddToFavorites = cell.findViewById(R.id.btn_content_favorites);
+            viewHolder.btnRating = cell.findViewById(R.id.btn_rating);
 
             //Opening hours
             viewHolder.sunday_hours = cell.findViewById(R.id.sunday_hours);
@@ -96,7 +97,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.thursday_hours = cell.findViewById(R.id.thursday_hours);
             viewHolder.friday_hours = cell.findViewById(R.id.friday_hours);
             viewHolder.saturday_hours = cell.findViewById(R.id.saturday_hours);
-
+            viewHolder.ratingBar = cell.findViewById(R.id.ratingBar);
 
             cell.setTag(viewHolder);
         } else {
@@ -113,11 +114,11 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             return cell;
 
         // set title logo image and match to the correct pub
-        String publogo = pub.getTitleName() + "_logo";
+        String publogo = pub.getTitleName().toLowerCase().replace(" ", "").replace("-", "").replace("'","") + "_logo";
         Resources Res = this.getContext().getResources();
         int drawableId = Res.getIdentifier(publogo, "drawable", "com.example.ipub");
         Drawable drawable = ContextCompat.getDrawable(getContext(), drawableId);
-        viewHolder.TitleName.setBackground(drawable);
+        viewHolder.TitleImage.setBackground(drawable);
 
         // set content logo image and match to the correct pub
         Drawable drawable1 = ContextCompat.getDrawable(getContext(), drawableId);
@@ -130,7 +131,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         viewHolder.distance.setText(new DecimalFormat(".#").format(pub.getDistance()) + " קילומטר ממך");
         viewHolder.Address.setText(pub.getAddress());
         viewHolder.Telephone.setText(pub.getTelephone());
-        viewHolder.Website.setText(pub.getKosher());
+        viewHolder.Kosher.setText(pub.getKosher());
         viewHolder.contentPubName.setText(pub.getName());
         viewHolder.sunday_hours.setText(pub.getSunday());
         viewHolder.monday_hours.setText(pub.getMonday());
@@ -139,6 +140,8 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         viewHolder.thursday_hours.setText(pub.getThursday());
         viewHolder.friday_hours.setText(pub.getFriday());
         viewHolder.saturday_hours.setText(pub.getSaturday());
+
+        viewHolder.ratingBar.setRating(4);
 
         // set custom btn handler for list item from that item
         if (pub.getRequestBtnClickListener() != null) {
@@ -156,6 +159,10 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
 
         if (pub.getBtnNavigateTopub() != null){
             viewHolder.btnAddToFavorites.setOnClickListener(pub.getBtnAddToFavorites());
+        }
+
+        if (pub.getBtnRating() != null) {
+            viewHolder.btnRating.setOnClickListener(pub.getBtnRating());
         }
 
         return cell;
@@ -184,11 +191,10 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
 
         //Card title variables
         TextView Name;
-        TextView TitleName;
+        TextView TitleImage;
         TextView Address;
-        TextView Kosher;
         TextView Telephone;
-        TextView Website;
+        TextView Kosher;
         TextView distance;
 
         //Card content variables
@@ -207,9 +213,13 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
 
         //buttons
         TextView contentRequestBtn;
+        TextView btnRating;
         ImageView btnGoToWebsite;
         ImageView btnNavigateToPub;
         ImageView btnAddToFavorites;
+
+
+        RatingBar ratingBar;
 
     }
 

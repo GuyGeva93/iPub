@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     boolean hasharon_flag;
     boolean center_flag;
     boolean south_flag;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             FavoritesList.add((Pub) O);
         }
 
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         pub_list = new ArrayList<Pub>();
         fullPubList = new ArrayList<Pub>();
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         report = findViewById(R.id.report_button);
         favorites = findViewById(R.id.favorites_button);
         kosher_flag = not_kosher_flag = north_flag = hasharon_flag = center_flag = south_flag = false;
+
 
         kosherSpinner = findViewById(R.id.kosher_Spinner);
         ArrayAdapter<CharSequence> kosherSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.KosherArray, android.R.layout.simple_spinner_dropdown_item);
@@ -506,6 +510,17 @@ public class MainActivity extends AppCompatActivity {
                 adapter.registerToggle(pos);
             }
         });
+
+        for (final Pub pub : pub_list) {
+            pub.setBtnRating(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, Ratings.class);
+                    intent.putExtra("pub_name", pub.getTitleName());
+                    startActivity(intent);
+                }
+            });
+        }
 
     }
 

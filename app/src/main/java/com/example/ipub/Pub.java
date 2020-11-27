@@ -17,6 +17,7 @@ public class Pub {
     private View.OnClickListener btnGoToWebsite;
     private View.OnClickListener btnNavigateTopub;
     private View.OnClickListener btnAddToFavorites;
+    private View.OnClickListener btnRating;
     private String Sunday;
     private String Monday;
     private String Tuesday;
@@ -47,6 +48,7 @@ public class Pub {
         this.Friday = friday;
         this.Saturday = saturday;
         this.Area = area;
+
 
     }
 
@@ -194,13 +196,20 @@ public class Pub {
         this.btnNavigateTopub = btnNavigateTopub;
     }
 
-
     public View.OnClickListener getBtnAddToFavorites() {
         return btnAddToFavorites;
     }
 
     public void setBtnAddToFavorites(View.OnClickListener btnAddToFavorites) {
         this.btnAddToFavorites = btnAddToFavorites;
+    }
+
+    public View.OnClickListener getBtnRating() {
+        return btnRating;
+    }
+
+    public void setBtnRating(View.OnClickListener btnRating) {
+        this.btnRating = btnRating;
     }
 
     public String getArea() {

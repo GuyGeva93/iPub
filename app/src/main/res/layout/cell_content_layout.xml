@@ -64,56 +64,56 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום ראשון:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום שני:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום שלישי:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום רביעי:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום חמישי:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום שישי:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="יום שבת:"
-                    android:textSize="18sp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -188,8 +188,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:clickable="true"
                     android:src="@drawable/waze" />
 
@@ -198,18 +198,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:clickable="true"
-                    android:src="@drawable/star" />
+                    android:src="@drawable/heart" />
 
                 <ImageView
                     android:id="@+id/btn_content_website"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:clickable="true"
                     android:src="@drawable/facebook" />
 
@@ -219,8 +219,18 @@
 
     </LinearLayout>
 
-
     <!-- content opening hours + add to favorites + navigate-->
+
+    <TextView
+        android:id="@+id/btn_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/rating"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:clickable="true"/>
+
 
     <!-- call button -->
     <TextView
@@ -236,13 +246,4 @@
         android:textSize="20sp" />
     <!-- call button -->
 
-
 </LinearLayout>
-
-    <!--    divider line-->
-    <!--        <ImageView-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="1dp"-->
-    <!--            android:layout_marginTop="9dp"-->
-    <!--            android:layout_marginBottom="6dp"-->
-    <!--            android:src="@color/contentDividerLine" />-->
