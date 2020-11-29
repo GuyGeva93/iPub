@@ -18,6 +18,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.ramotion.foldingcell.FoldingCell;
 //import com.ramotion.foldingcell.examples.R;
 
@@ -42,6 +47,10 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
     private List<Pub> pubList;
     private List<Pub> fullPubList;
     private List<Pub> sortPubList;
+    FirebaseDatabase database;
+    DatabaseReference mRef;
+    int count = 0;
+    int sum = 0;
 
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
 //    private View.OnClickListener defaultRequestBtnClickListener;
@@ -67,7 +76,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         Pub pub = getItem(position);
         // if cell is exists - reuse it, if not - create the new one from resource
         FoldingCell cell = (FoldingCell) convertView;
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (cell == null) {
             viewHolder = new ViewHolder();
             LayoutInflater vi = LayoutInflater.from(getContext());
@@ -84,7 +93,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
 
             //buttons
             viewHolder.contentRequestBtn = cell.findViewById(R.id.content_make_call_btn);
-            viewHolder.btnGoToWebsite =cell.findViewById(R.id.btn_content_website);
+            viewHolder.btnGoToWebsite = cell.findViewById(R.id.btn_content_website);
             viewHolder.btnNavigateToPub = cell.findViewById(R.id.btn_content_navigate);
             viewHolder.btnAddToFavorites = cell.findViewById(R.id.btn_content_favorites);
             viewHolder.btnRating = cell.findViewById(R.id.btn_rating);
@@ -114,7 +123,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             return cell;
 
         // set title logo image and match to the correct pub
-        String publogo = pub.getTitleName().toLowerCase().replace(" ", "").replace("-", "").replace("'","") + "_logo";
+        String publogo = pub.getTitleName().toLowerCase().replace(" ", "").replace("-", "").replace("'", "") + "_logo";
         Resources Res = this.getContext().getResources();
         int drawableId = Res.getIdentifier(publogo, "drawable", "com.example.ipub");
         Drawable drawable = ContextCompat.getDrawable(getContext(), drawableId);
@@ -141,7 +150,31 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         viewHolder.friday_hours.setText(pub.getFriday());
         viewHolder.saturday_hours.setText(pub.getSaturday());
 
-        viewHolder.ratingBar.setRating(4);
+        // Getting the pub's rate from firebase
+        //viewHolder.ratingBar.setRating(0);
+        database = FirebaseDatabase.getInstance();
+        mRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    sum += Integer.parseInt(snapshot.child("StarsRate").getValue().toString());
+                    count++;
+                }
+                if (count > 0) {
+                    sum = sum / count;
+                    viewHolder.ratingBar.setRating(sum);
+                } else
+                    viewHolder.ratingBar.setRating(0);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         // set custom btn handler for list item from that item
         if (pub.getRequestBtnClickListener() != null) {
@@ -153,11 +186,11 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.btnGoToWebsite.setOnClickListener(pub.getBtnGoToWebsite());
         }
 
-        if (pub.getBtnNavigateTopub() != null){
+        if (pub.getBtnNavigateTopub() != null) {
             viewHolder.btnNavigateToPub.setOnClickListener(pub.getBtnNavigateTopub());
         }
 
-        if (pub.getBtnNavigateTopub() != null){
+        if (pub.getBtnNavigateTopub() != null) {
             viewHolder.btnAddToFavorites.setOnClickListener(pub.getBtnAddToFavorites());
         }
 
@@ -183,7 +216,6 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
     public void registerUnfold(int position) {
         unfoldedIndexes.add(position);
     }
-
 
 
     // View lookup cache
@@ -252,9 +284,9 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
-                pubList.clear();
-                pubList.addAll((List) results.values);
-                notifyDataSetChanged();
+            pubList.clear();
+            pubList.addAll((List) results.values);
+            notifyDataSetChanged();
 
         }
     };
