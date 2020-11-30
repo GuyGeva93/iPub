@@ -87,18 +87,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-        ObjectsList.addAll(tinyDB.getListObject("FavoritesList", Pub.class));
-
+        initViews();
+        initVariables();
+        initSpinners();
+        getDataFromDB();
         for (Object O : ObjectsList) {
             FavoritesList.add((Pub) O);
         }
-        initViews();
-        initVariabls();
-        initSpinners();
-        getDataFromDB();
         report.setOnClickListener(this);
         favorites.setOnClickListener(this);
 
@@ -396,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void initVariabls() {
+    private void initVariables() {
         pub_list = new ArrayList<Pub>();
         tinyDB = new TinyDB(this);
         FavoritesList = new ArrayList<Pub>();
@@ -410,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Pubs");
         kosher_flag = not_kosher_flag = north_flag = hasharon_flag = center_flag = south_flag = false;
+        ObjectsList.addAll(tinyDB.getListObject("FavoritesList", Pub.class));
     }
 
     private void initViews() {
@@ -516,6 +512,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // call to pub from iPub directly
     private void makePhoneCall(String tel) {
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
@@ -525,10 +522,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // navigate to pub's website
     private void goToWebsite(String website) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
     }
 
+    // Waze navigation (or Google Maps)
     private void navigateToPub(double lat, double lon) {
         String uri = "waze://?ll=" + lat + ", " + lon + "&navigate=yes";
         // try to navigate with Waze
@@ -544,6 +543,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // retriving data from Firebase
     private void getDataFromDB() {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -560,7 +560,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             snapshot.child("Monday").getValue().toString(), snapshot.child("Tuesday").getValue().toString(),
                             snapshot.child("Wednesday").getValue().toString(), snapshot.child("Thursday").getValue().toString(),
                             snapshot.child("Friday").getValue().toString(), snapshot.child("Saturday").getValue().toString(),
-                            snapshot.child("Area").getValue().toString());
+                            snapshot.child("Area").getValue().toString(), Float.parseFloat(snapshot.child("RatingAverage").getValue().toString()));
 
                     pub_list.add(temp);
                     fullPubList.add(temp);
@@ -585,6 +585,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
     public void setTitleCards() {
         pub_list.sort(new DistanceComparator());
         sortKosherPubList.sort(new DistanceComparator());
@@ -597,6 +598,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         theListView.setAdapter(adapter);
     }
 
+    // next three methods to calculate the distance between user and pubs
     public double getKilometers(double lat1, double long1, double lat2, double long2) {
         double PI_RAD = Math.PI / 180.0;
         double phi1 = lat1 * PI_RAD;

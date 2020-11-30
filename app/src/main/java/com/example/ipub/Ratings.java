@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Ratings extends AppCompatActivity {
@@ -29,12 +30,12 @@ public class Ratings extends AppCompatActivity {
     String pub_name;
     FirebaseDatabase database;
     DatabaseReference mRef;
-    DatabaseReference mRef_commentLine;
     RatingBar ratingBar;
-    int stars = 0;
-    public ArrayList<CommentInfo> commentInfos;
-    int count;
-
+    int count = 0;
+    int average = 0;
+    long millisecond;
+    boolean flag = false;
+    TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,65 +48,68 @@ public class Ratings extends AppCompatActivity {
         pub_name = getIntent().getStringExtra("pub_name");
         database = FirebaseDatabase.getInstance();
         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
-        mRef_commentLine = database.getReference().child("Pubs").child(pub_name).child("Ratings");
         ratingBar = findViewById(R.id.rating_bar);
-        commentInfos = new ArrayList<CommentInfo>();
+        tinyDB = new TinyDB(this);
+
 
         btn_send_rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ratingBar.getRating() == 0) {
-                    Toast.makeText(getApplicationContext(), "אנא דרג את הפאב", Toast.LENGTH_LONG).show();
-                } else if (txt_rate_name.getText().toString().equals("") || txt_rate.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
+                millisecond = System.currentTimeMillis();
+                mRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                            if (Long.parseLong(snapshot.getValue().toString()) == tinyDB.getLong(pub_name, 0)) {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                if (flag == true) {
+                    Toast.makeText(getApplicationContext(), "כבר דירגת את הפאב הנוכחי, לא ניתן לדרג פאב פעמיים", Toast.LENGTH_LONG).show();
                 } else {
-                    mRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                count = Integer.parseInt(String.valueOf(snapshot.getChildrenCount()));
+                    if (ratingBar.getRating() == 0) {
+                        Toast.makeText(getApplicationContext(), "אנא דרג את הפאב", Toast.LENGTH_LONG).show();
+                    } else if (txt_rate_name.getText().toString().equals("") || txt_rate.getText().toString().equals("")) {
+                        Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
+                    } else {
+                        mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings").child(String.valueOf(millisecond));
+                        tinyDB.putLong(pub_name, millisecond);
+                        mRef.child("Name").setValue(txt_rate_name.getText().toString());
+                        mRef.child("Comment").setValue(txt_rate.getText().toString());
+                        mRef.child("StarsRate").setValue(ratingBar.getRating());
+                        mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
+                        mRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    average += Integer.parseInt(snapshot.child("StarsRate").getValue().toString());
+                                    count++;
                                 }
+                                average /= count;
+                                mRef = database.getReference().child("Pubs").child(pub_name).child("RatingAverage");
+                                mRef.setValue(average);
                             }
 
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                    mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings").child(String.valueOf(count+1));
-                    mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings").child(txt_rate_name.getText().toString());
-                    mRef.child("Comment").setValue(txt_rate.getText().toString());
-                    mRef.child("StarsRate").setValue(ratingBar.getRating());
-
-                    Toast.makeText(getApplicationContext(), "הביקורת נשלחה בהצלחה!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(Ratings.this, MainActivity.class));
+                            }
+                        });
+                        Toast.makeText(getApplicationContext(), "הביקורת נשלחה בהצלחה!", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(Ratings.this, MainActivity.class));
+                    }
                 }
             }
         });
-
-        mRef_commentLine.addValueEventListener(new ValueEventListener() {
-            String name;
-            String comment;
-            float rating;
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    //name = snapshot.;
-                    comment = snapshot.child("Comment").getValue().toString();
-                    rating = Float.parseFloat(snapshot.child("StarsRate").getValue().toString());
-                    commentInfos.add(new CommentInfo(name, comment, rating));
-                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
     }
 }

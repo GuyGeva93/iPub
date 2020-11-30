@@ -149,34 +149,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         viewHolder.thursday_hours.setText(pub.getThursday());
         viewHolder.friday_hours.setText(pub.getFriday());
         viewHolder.saturday_hours.setText(pub.getSaturday());
-        //add get rating ber here
         viewHolder.ratingBar.setRating(pub.getRating());
-
-        // Getting the pub's rate from firebase
-        //viewHolder.ratingBar.setRating(0);
-//        database = FirebaseDatabase.getInstance();
-//        mRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
-//        mRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    sum += Integer.parseInt(snapshot.child("StarsRate").getValue().toString());
-//                    count++;
-//                }
-//                if (count > 0) {
-//                    sum = sum / count;
-//                    viewHolder.ratingBar.setRating(sum);
-//                } else
-//                    viewHolder.ratingBar.setRating(0);
-//            }
-//
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
 
         // set custom btn handler for list item from that item
         if (pub.getRequestBtnClickListener() != null) {

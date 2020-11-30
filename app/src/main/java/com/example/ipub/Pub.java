@@ -26,12 +26,13 @@ public class Pub {
     private String Friday;
     private String Saturday;
     private String Area;
+    private float Rating;
 
     public Pub() {
     }
 
-    public Pub(String name,String titleName, String address, double lon, double lat, String kosher, String telephone, String website, String sunday,
-               String monday, String tuesday, String wednesday, String thursday, String friday, String saturday, String area) {
+    public Pub(String name, String titleName, String address, double lon, double lat, String kosher, String telephone, String website, String sunday,
+               String monday, String tuesday, String wednesday, String thursday, String friday, String saturday, String area, float rating) {
         this.Name = name;
         this.TitleName = titleName;
         this.Address = address;
@@ -48,8 +49,7 @@ public class Pub {
         this.Friday = friday;
         this.Saturday = saturday;
         this.Area = area;
-
-
+        this.Rating = rating;
     }
 
     public String getMonday() {
@@ -162,6 +162,14 @@ public class Pub {
 
     public double getLat() {
         return Lat;
+    }
+
+    public void setRating(float rating) {
+        this.Rating = rating;
+    }
+
+    public float getRating() {
+        return Rating;
     }
 
     public double getDistance() {
