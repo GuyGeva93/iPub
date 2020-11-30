@@ -1,5 +1,6 @@
 package com.example.ipub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -12,8 +13,13 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class Ratings extends AppCompatActivity {
 
@@ -23,8 +29,11 @@ public class Ratings extends AppCompatActivity {
     String pub_name;
     FirebaseDatabase database;
     DatabaseReference mRef;
+    DatabaseReference mRef_commentLine;
     RatingBar ratingBar;
     int stars = 0;
+    public ArrayList<CommentInfo> commentInfos;
+    int count;
 
 
     @Override
@@ -38,7 +47,9 @@ public class Ratings extends AppCompatActivity {
         pub_name = getIntent().getStringExtra("pub_name");
         database = FirebaseDatabase.getInstance();
         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
+        mRef_commentLine = database.getReference().child("Pubs").child(pub_name).child("Ratings");
         ratingBar = findViewById(R.id.rating_bar);
+        commentInfos = new ArrayList<CommentInfo>();
 
         btn_send_rate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,14 +59,53 @@ public class Ratings extends AppCompatActivity {
                 } else if (txt_rate_name.getText().toString().equals("") || txt_rate.getText().toString().equals("")) {
                     Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
                 } else {
+                    mRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                count = Integer.parseInt(String.valueOf(snapshot.getChildrenCount()));
+                                }
+                            }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings").child(String.valueOf(count+1));
                     mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings").child(txt_rate_name.getText().toString());
                     mRef.child("Comment").setValue(txt_rate.getText().toString());
                     mRef.child("StarsRate").setValue(ratingBar.getRating());
+
                     Toast.makeText(getApplicationContext(), "הביקורת נשלחה בהצלחה!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(Ratings.this, MainActivity.class));
                 }
             }
         });
+
+        mRef_commentLine.addValueEventListener(new ValueEventListener() {
+            String name;
+            String comment;
+            float rating;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    //name = snapshot.;
+                    comment = snapshot.child("Comment").getValue().toString();
+                    rating = Float.parseFloat(snapshot.child("StarsRate").getValue().toString());
+                    commentInfos.add(new CommentInfo(name, comment, rating));
+                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
 }

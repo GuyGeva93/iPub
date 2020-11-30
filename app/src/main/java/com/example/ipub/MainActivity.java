@@ -51,7 +51,7 @@ import static java.lang.Math.acos;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private int LOCATION_PERMISSION_CODE = 1;
     private static final int REQUEST_CALL = 1;
@@ -88,60 +88,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tinyDB = new TinyDB(this);
 
-        FavoritesList = new ArrayList<Pub>();
-        ObjectsList = new ArrayList<Object>();
 
         ObjectsList.addAll(tinyDB.getListObject("FavoritesList", Pub.class));
 
         for (Object O : ObjectsList) {
             FavoritesList.add((Pub) O);
         }
-
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        pub_list = new ArrayList<Pub>();
-        fullPubList = new ArrayList<Pub>();
-        sortKosherPubList = new ArrayList<Pub>();
-        sortNotKosherPubList = new ArrayList<Pub>();
-        sortCenterPubList = new ArrayList<Pub>();
-        adapter = new FoldingCellListAdapter(this, pub_list);
-        theListView = findViewById(R.id.list_view);
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("Pubs");
-        report = findViewById(R.id.report_button);
-        favorites = findViewById(R.id.favorites_button);
-        kosher_flag = not_kosher_flag = north_flag = hasharon_flag = center_flag = south_flag = false;
-
-
-        kosherSpinner = findViewById(R.id.kosher_Spinner);
-        ArrayAdapter<CharSequence> kosherSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.KosherArray, android.R.layout.simple_spinner_dropdown_item);
-        kosherSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        kosherSpinner.setAdapter(kosherSpinnerAdapter);
-
-        areaSpinner = findViewById(R.id.area_spinner);
-        ArrayAdapter<CharSequence> areaSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.areaArray, android.R.layout.simple_spinner_dropdown_item);
-        areaSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        areaSpinner.setAdapter(areaSpinnerAdapter);
-
+        initViews();
+        initVariabls();
+        initSpinners();
         getDataFromDB();
-
-        report.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ReportActivity.class);
-                startActivity(i);
-            }
-        });
-
-        favorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, FavoritesActivity.class);
-                startActivity(i);
-            }
-        });
+        report.setOnClickListener(this);
+        favorites.setOnClickListener(this);
 
         kosherSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -435,7 +394,40 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+    }
 
+    private void initVariabls() {
+        pub_list = new ArrayList<Pub>();
+        tinyDB = new TinyDB(this);
+        FavoritesList = new ArrayList<Pub>();
+        ObjectsList = new ArrayList<Object>();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fullPubList = new ArrayList<Pub>();
+        sortKosherPubList = new ArrayList<Pub>();
+        sortNotKosherPubList = new ArrayList<Pub>();
+        sortCenterPubList = new ArrayList<Pub>();
+        adapter = new FoldingCellListAdapter(this, pub_list);
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child("Pubs");
+        kosher_flag = not_kosher_flag = north_flag = hasharon_flag = center_flag = south_flag = false;
+    }
+
+    private void initViews() {
+        areaSpinner = findViewById(R.id.area_spinner);
+        theListView = findViewById(R.id.list_view);
+        report = findViewById(R.id.report_button);
+        favorites = findViewById(R.id.favorites_button);
+    }
+
+    private void initSpinners() {
+        kosherSpinner = findViewById(R.id.kosher_Spinner);
+        ArrayAdapter<CharSequence> kosherSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.KosherArray, android.R.layout.simple_spinner_dropdown_item);
+        kosherSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        kosherSpinner.setAdapter(kosherSpinnerAdapter);
+
+        ArrayAdapter<CharSequence> areaSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.areaArray, android.R.layout.simple_spinner_dropdown_item);
+        areaSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        areaSpinner.setAdapter(areaSpinnerAdapter);
     }
 
     private void initListView() {
@@ -524,7 +516,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void makePhoneCall(String tel) {
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
@@ -570,6 +561,7 @@ public class MainActivity extends AppCompatActivity {
                             snapshot.child("Wednesday").getValue().toString(), snapshot.child("Thursday").getValue().toString(),
                             snapshot.child("Friday").getValue().toString(), snapshot.child("Saturday").getValue().toString(),
                             snapshot.child("Area").getValue().toString());
+
                     pub_list.add(temp);
                     fullPubList.add(temp);
                     if (temp.getKosher().equals("כשר"))
@@ -756,6 +748,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // onClick events
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.favorites_button:
+                startActivity(new Intent(MainActivity.this, FavoritesActivity.class));
+                break;
+            case R.id.report_button:
+                startActivity(new Intent(MainActivity.this, ReportActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+    }
 }
 
 
