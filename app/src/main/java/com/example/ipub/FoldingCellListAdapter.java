@@ -267,4 +267,61 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
     };
 
 
-}
+    public Filter getSpinnerFilter() {
+        return pubSpinnerFilter;
+    }
+    private Filter pubSpinnerFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint ) {
+            List<Pub> filteredList = new ArrayList<>();
+            String kosher = String.valueOf(constraint.toString().subSequence(0 , constraint.toString().indexOf("-")));
+            String area = constraint.toString().substring(constraint.toString().indexOf("-")+1 );
+            if (kosher.equals("כשרות")&& area.equals("איזור")) {
+                filteredList.addAll(fullPubList);
+            } else {
+                if(kosher.equals("כשרות") && !area.equals("איזור"))
+                {
+                    for (Pub pub : fullPubList) {
+                        if ( pub.getArea().equals(area)) {
+                            filteredList.add(pub);
+                        }
+                    }
+                }
+                else if(!kosher.equals("כשרות") && area.equals("איזור")){
+                    for (Pub pub : fullPubList) {
+                        if (pub.getKosher().equals(kosher) ) {
+                            filteredList.add(pub);
+                        }
+                    }
+                }
+                else{
+                    for (Pub pub : fullPubList) {
+                        if (pub.getKosher().equals(kosher) && pub.getArea().equals(area)) {
+                            filteredList.add(pub);
+                        }
+                    }
+                }
+
+
+
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            pubList.clear();
+            pubList.addAll((List) results.values);
+            notifyDataSetChanged();
+
+        }
+
+    };
+
+
+
+    }

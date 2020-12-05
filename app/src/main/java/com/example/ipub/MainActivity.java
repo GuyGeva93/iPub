@@ -51,11 +51,10 @@ import static java.lang.Math.acos;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener  {
 
     private int LOCATION_PERMISSION_CODE = 1;
     private static final int REQUEST_CALL = 1;
-    // initializing FusedLocationProviderClient object
     private FusedLocationProviderClient mFusedLocationClient;
     int PERMISSION_ID = 44;
     public double user_lat;
@@ -75,13 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Spinner kosherSpinner;
     Spinner areaSpinner;
     TinyDB tinyDB;
-    boolean kosher_flag;
-    boolean not_kosher_flag;
-    boolean north_flag;
-    boolean hasharon_flag;
-    boolean center_flag;
-    boolean south_flag;
-    RatingBar ratingBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,304 +84,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initVariables();
         initSpinners();
         getDataFromDB();
-        for (Object O : ObjectsList) {
-            FavoritesList.add((Pub) O);
-        }
+
+        //onClickEvents
         report.setOnClickListener(this);
         favorites.setOnClickListener(this);
 
-        kosherSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (id == 0) {
-                    kosher_flag = not_kosher_flag = false;
-                    if ((!north_flag) && (!south_flag) && (!hasharon_flag) && (!center_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, pub_list);
-                        theListView.setAdapter(adapter);
-                    } else if (north_flag) {
-                        ArrayList<Pub> north_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("North")) {
-                                north_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, north_list);
-                        theListView.setAdapter(adapter);
-                    } else if (hasharon_flag) {
-                        ArrayList<Pub> hasharon_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Hasharon")) {
-                                hasharon_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, hasharon_list);
-                        theListView.setAdapter(adapter);
-                    } else if (center_flag) {
-                        ArrayList<Pub> center_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Center")) {
-                                center_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, center_list);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> south_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("South")) {
-                                south_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, south_list);
-                        theListView.setAdapter(adapter);
-                    }
+        //Spinner Item Selected Events
+        kosherSpinner.setOnItemSelectedListener(this);
+        areaSpinner.setOnItemSelectedListener(this);
 
-                } else if (id == 1) {
-                    kosher_flag = true;
-                    not_kosher_flag = false;
-                    if ((!north_flag) && (!south_flag) && (!hasharon_flag) && (!center_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortKosherPubList);
-                        theListView.setAdapter(adapter);
-                    } else if (north_flag) {
-                        ArrayList<Pub> kosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                kosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherNorthList);
-                        theListView.setAdapter(adapter);
-                    } else if (hasharon_flag) {
-                        ArrayList<Pub> kosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                kosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    } else if (center_flag) {
-                        ArrayList<Pub> kosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                kosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherCenterList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> kosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                kosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherSouthList);
-                        theListView.setAdapter(adapter);
-                    }
-                } else {
-                    not_kosher_flag = true;
-                    kosher_flag = false;
-                    if ((!north_flag) && (!south_flag) && (!hasharon_flag) && (!center_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortNotKosherPubList);
-                        theListView.setAdapter(adapter);
-                    } else if (north_flag) {
-                        ArrayList<Pub> notKosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                notKosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherNorthList);
-                        theListView.setAdapter(adapter);
-                    } else if (hasharon_flag) {
-                        ArrayList<Pub> notKosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                notKosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    } else if (center_flag) {
-                        ArrayList<Pub> notKosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                notKosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherCenterList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        kosher_flag = false;
-                        not_kosher_flag = true;
-                        ArrayList<Pub> notKosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                notKosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherSouthList);
-                        theListView.setAdapter(adapter);
-                    }
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-
-        });
-
-        areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position2, long id2) {
-                if (id2 == 0) {
-                    north_flag = hasharon_flag = center_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, pub_list);
-                        theListView.setAdapter(adapter);
-                    } else if ((kosher_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortKosherPubList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortNotKosherPubList);
-                        theListView.setAdapter(adapter);
-                    }
-
-                } else if (id2 == 1) {
-                    north_flag = true;
-                    hasharon_flag = center_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> north_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("North")) {
-                                north_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, north_list);
-                        theListView.setAdapter(adapter);
-                    } else if ((kosher_flag)) {
-                        ArrayList<Pub> kosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                kosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherNorthList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                notKosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherNorthList);
-                        theListView.setAdapter(adapter);
-                    }
-
-                } else if (id2 == 2) {
-                    hasharon_flag = true;
-                    north_flag = center_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> hasharon_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Hasharon")) {
-                                hasharon_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, hasharon_list);
-                        theListView.setAdapter(adapter);
-                    } else if ((kosher_flag)) {
-                        ArrayList<Pub> kosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                kosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                notKosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    }
-                } else if (id2 == 3) {
-                    center_flag = true;
-                    north_flag = hasharon_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> center_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Center")) {
-                                center_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, center_list);
-                        theListView.setAdapter(adapter);
-                    } else if (kosher_flag) {
-                        ArrayList<Pub> kosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                kosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherCenterList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                notKosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherCenterList);
-                        theListView.setAdapter(adapter);
-                    }
-
-                } else {
-                    south_flag = true;
-                    north_flag = hasharon_flag = center_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> south_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("South")) {
-                                south_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, south_list);
-                        theListView.setAdapter(adapter);
-                    } else if (kosher_flag) {
-                        ArrayList<Pub> kosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                kosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherSouthList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                notKosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherSouthList);
-                        theListView.setAdapter(adapter);
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
     }
 
     private void initVariables() {
@@ -404,8 +109,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         adapter = new FoldingCellListAdapter(this, pub_list);
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Pubs");
-        kosher_flag = not_kosher_flag = north_flag = hasharon_flag = center_flag = south_flag = false;
         ObjectsList.addAll(tinyDB.getListObject("FavoritesList", Pub.class));
+        for (Object O : ObjectsList) {
+            FavoritesList.add((Pub) O);
+        }
+
     }
 
     private void initViews() {
@@ -609,13 +317,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
     }
 
-    private double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
+//    private double deg2rad(double deg) {
+//        return (deg * Math.PI / 180.0);
+//    }
+//
+//    private double rad2deg(double rad) {
+//        return (rad * 180.0 / Math.PI);
+//    }
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -763,13 +471,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //onItemSelected events
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (adapterView.getId()){
+            case R.id.kosher_Spinner:
+                if(l == 0){
+                    if(pub_list.size()>0){
+                        adapter.setFullPubList(fullPubList);
+                        String s = "כשרות-" + areaSpinner.getSelectedItem().toString();
+                        adapter.getSpinnerFilter().filter(s);
+                    }
+
+                }
+                else if(l == 1){
+                    adapter.setFullPubList(fullPubList);
+                    String s = "כשר-" + areaSpinner.getSelectedItem().toString();
+                    adapter.getSpinnerFilter().filter(s);
+
+                }
+                else{
+                    adapter.setFullPubList(fullPubList);
+                    String s = "לא כשר-" + areaSpinner.getSelectedItem().toString();
+                    adapter.getSpinnerFilter().filter( s);
+
+                }
+                break;
+
+            case R.id.area_spinner:
+                if(l == 0){
+                    if(pub_list.size()>0) {
+                        adapter.setFullPubList(fullPubList);
+                        String s = kosherSpinner.getSelectedItem().toString() + "-איזור";
+                        adapter.getSpinnerFilter().filter(s);
+                    }
+
+                }
+                else if(l == 1){
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-צפון";
+                    adapter.getSpinnerFilter().filter(s);
+                }
+                else if(l == 2){
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-השרון";
+                    adapter.getSpinnerFilter().filter(s);
+                }
+                else if(l == 3){
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-מרכז";
+                    adapter.getSpinnerFilter().filter(s);
+                }
+                else{
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-דרום";
+                    adapter.getSpinnerFilter().filter(s);
+                }
+
+                break;
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
+
+
+
 }
 
 
