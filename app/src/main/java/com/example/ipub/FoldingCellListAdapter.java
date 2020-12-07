@@ -53,7 +53,6 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
     int sum = 0;
 
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
-//    private View.OnClickListener defaultRequestBtnClickListener;
 
     public FoldingCellListAdapter(Context context, List<Pub> objects) {
         super(context, 0, objects);
@@ -96,7 +95,8 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.btnGoToWebsite = cell.findViewById(R.id.btn_content_website);
             viewHolder.btnNavigateToPub = cell.findViewById(R.id.btn_content_navigate);
             viewHolder.btnAddToFavorites = cell.findViewById(R.id.btn_content_favorites);
-            viewHolder.btnRating = cell.findViewById(R.id.btn_rating);
+            viewHolder.btnComment = cell.findViewById(R.id.btn_comments);
+            viewHolder.btnRatePub = cell.findViewById(R.id.btn_rate);
 
             //Opening hours
             viewHolder.sunday_hours = cell.findViewById(R.id.sunday_hours);
@@ -169,8 +169,12 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.btnAddToFavorites.setOnClickListener(pub.getBtnAddToFavorites());
         }
 
-        if (pub.getBtnRating() != null) {
-            viewHolder.btnRating.setOnClickListener(pub.getBtnRating());
+        if (pub.getBtnComments() != null) {
+            viewHolder.btnComment.setOnClickListener(pub.getBtnComments());
+        }
+
+        if(pub.getBtnRatePub() != null){
+            viewHolder.btnRatePub.setOnClickListener(pub.getBtnRatePub());
         }
 
         return cell;
@@ -220,7 +224,8 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
 
         //buttons
         TextView contentRequestBtn;
-        TextView btnRating;
+        TextView btnComment;
+        TextView btnRatePub;
         ImageView btnGoToWebsite;
         ImageView btnNavigateToPub;
         ImageView btnAddToFavorites;
@@ -267,4 +272,61 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
     };
 
 
-}
+    public Filter getSpinnerFilter() {
+        return pubSpinnerFilter;
+    }
+    private Filter pubSpinnerFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint ) {
+            List<Pub> filteredList = new ArrayList<>();
+            String kosher = String.valueOf(constraint.toString().subSequence(0 , constraint.toString().indexOf("-")));
+            String area = constraint.toString().substring(constraint.toString().indexOf("-")+1 );
+            if (kosher.equals("כשרות")&& area.equals("איזור")) {
+                filteredList.addAll(fullPubList);
+            } else {
+                if(kosher.equals("כשרות") && !area.equals("איזור"))
+                {
+                    for (Pub pub : fullPubList) {
+                        if ( pub.getArea().equals(area)) {
+                            filteredList.add(pub);
+                        }
+                    }
+                }
+                else if(!kosher.equals("כשרות") && area.equals("איזור")){
+                    for (Pub pub : fullPubList) {
+                        if (pub.getKosher().equals(kosher) ) {
+                            filteredList.add(pub);
+                        }
+                    }
+                }
+                else{
+                    for (Pub pub : fullPubList) {
+                        if (pub.getKosher().equals(kosher) && pub.getArea().equals(area)) {
+                            filteredList.add(pub);
+                        }
+                    }
+                }
+
+
+
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+
+            pubList.clear();
+            pubList.addAll((List) results.values);
+            notifyDataSetChanged();
+
+        }
+
+    };
+
+
+
+    }

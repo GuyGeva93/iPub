@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
@@ -36,6 +37,9 @@ public class Ratings extends AppCompatActivity {
     long millisecond;
     boolean flag = false;
     TinyDB tinyDB;
+    ArrayList<CommentInfo> commentsList = new ArrayList<CommentInfo>();
+    CommentLineListAdapter adapter;
+    ListView commentsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,10 @@ public class Ratings extends AppCompatActivity {
         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
         ratingBar = findViewById(R.id.rating_bar);
         tinyDB = new TinyDB(this);
+        commentsListView = findViewById(R.id.comments_list_view);
+        adapter = new CommentLineListAdapter(this ,R.layout.comment_line ,commentsList);
+
+        readCommentsFromDB();
 
 
         btn_send_rate.setOnClickListener(new View.OnClickListener() {
@@ -59,12 +67,13 @@ public class Ratings extends AppCompatActivity {
                 mRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        flag = false;
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-
-                            if (Long.parseLong(snapshot.getValue().toString()) == tinyDB.getLong(pub_name, 0)) {
+                            long timeStamp = tinyDB.getLong(pub_name , 0);
+                            if(String.valueOf(timeStamp).equals(snapshot.getKey())) {
                                 flag = true;
-                                break;
                             }
+
                         }
                     }
 
@@ -83,10 +92,14 @@ public class Ratings extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
                     } else {
                         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings").child(String.valueOf(millisecond));
+                        CommentInfo temp = new CommentInfo(txt_rate_name.getText().toString() ,txt_rate.getText().toString() , ratingBar.getRating() );
+                        mRef.setValue(temp);
                         tinyDB.putLong(pub_name, millisecond);
-                        mRef.child("Name").setValue(txt_rate_name.getText().toString());
-                        mRef.child("Comment").setValue(txt_rate.getText().toString());
-                        mRef.child("StarsRate").setValue(ratingBar.getRating());
+
+                        //mRef.child("Name").setValue(txt_rate_name.getText().toString());
+                        //mRef.child("Comment").setValue(txt_rate.getText().toString());
+                        //mRef.child("StarsRate").setValue(ratingBar.getRating());
+
                         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
                         mRef.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -111,5 +124,36 @@ public class Ratings extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
+
+    private void readCommentsFromDB() {
+
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                commentsList.clear();
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    CommentInfo temp = dataSnapshot.getValue(CommentInfo.class);
+                    //CommentInfo temp = new CommentInfo(dataSnapshot.child("Name").getValue().toString() ,
+                    //        dataSnapshot.child("Comment").getValue().toString() ,
+                    //        Float.parseFloat(dataSnapshot.child("StarsRate").getValue().toString()));
+                    commentsList.add(temp);
+                }
+                adapter.setCommentsList(commentsList);
+                commentsListView.setAdapter(adapter);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
 }

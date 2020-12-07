@@ -17,7 +17,11 @@ public class Pub {
     private View.OnClickListener btnGoToWebsite;
     private View.OnClickListener btnNavigateTopub;
     private View.OnClickListener btnAddToFavorites;
-    private View.OnClickListener btnRating;
+    private View.OnClickListener btnComments;
+
+
+
+    private View.OnClickListener btnRatePub;
     private String Sunday;
     private String Monday;
     private String Tuesday;
@@ -212,12 +216,20 @@ public class Pub {
         this.btnAddToFavorites = btnAddToFavorites;
     }
 
-    public View.OnClickListener getBtnRating() {
-        return btnRating;
+    public View.OnClickListener getBtnComments() {
+        return btnComments;
     }
 
-    public void setBtnRating(View.OnClickListener btnRating) {
-        this.btnRating = btnRating;
+    public void setBtnComments(View.OnClickListener btnRating) {
+        this.btnComments = btnRating;
+    }
+
+    public View.OnClickListener getBtnRatePub() {
+        return btnRatePub;
+    }
+
+    public void setBtnRatePub(View.OnClickListener btnRatePub) {
+        this.btnRatePub = btnRatePub;
     }
 
     public String getArea() {
@@ -227,4 +239,6 @@ public class Pub {
     public void setArea(String area) {
         Area = area;
     }
+
+
 }
