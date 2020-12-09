@@ -2,22 +2,30 @@ package com.example.ipub;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.Layout;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.SearchView;
@@ -55,33 +63,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private int LOCATION_PERMISSION_CODE = 1;
     private static final int REQUEST_CALL = 1;
-    // initializing FusedLocationProviderClient object
     private FusedLocationProviderClient mFusedLocationClient;
     int PERMISSION_ID = 44;
     public double user_lat;
     public double user_lon;
     public ArrayList<Pub> pub_list;
     public ArrayList<Pub> fullPubList;
-    public ArrayList<Pub> sortKosherPubList;
-    public ArrayList<Pub> sortNotKosherPubList;
-    public ArrayList<Pub> sortCenterPubList;
     public ArrayList<Pub> FavoritesList;
     ArrayList<Object> ObjectsList;
     FoldingCellListAdapter adapter;
     ListView theListView;
     DatabaseReference myRef;
+    DatabaseReference ratingRef;
     FirebaseDatabase database;
     TextView report, favorites;
     Spinner kosherSpinner;
     Spinner areaSpinner;
     TinyDB tinyDB;
-    boolean kosher_flag;
-    boolean not_kosher_flag;
-    boolean north_flag;
-    boolean hasharon_flag;
-    boolean center_flag;
-    boolean south_flag;
-    RatingBar ratingBar;
+    long millisecond;
+    boolean flag;
+    EditText dialogComment;
+    EditText dialogUserName;
+    RatingBar dialogRatingBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,304 +95,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initVariables();
         initSpinners();
         getDataFromDB();
-        for (Object O : ObjectsList) {
-            FavoritesList.add((Pub) O);
-        }
+
+        //onClickEvents
         report.setOnClickListener(this);
         favorites.setOnClickListener(this);
 
-        kosherSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (id == 0) {
-                    kosher_flag = not_kosher_flag = false;
-                    if ((!north_flag) && (!south_flag) && (!hasharon_flag) && (!center_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, pub_list);
-                        theListView.setAdapter(adapter);
-                    } else if (north_flag) {
-                        ArrayList<Pub> north_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("North")) {
-                                north_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, north_list);
-                        theListView.setAdapter(adapter);
-                    } else if (hasharon_flag) {
-                        ArrayList<Pub> hasharon_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Hasharon")) {
-                                hasharon_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, hasharon_list);
-                        theListView.setAdapter(adapter);
-                    } else if (center_flag) {
-                        ArrayList<Pub> center_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Center")) {
-                                center_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, center_list);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> south_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("South")) {
-                                south_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, south_list);
-                        theListView.setAdapter(adapter);
-                    }
+        //Spinner Item Selected Events
+        kosherSpinner.setOnItemSelectedListener(this);
+        areaSpinner.setOnItemSelectedListener(this);
 
-                } else if (id == 1) {
-                    kosher_flag = true;
-                    not_kosher_flag = false;
-                    if ((!north_flag) && (!south_flag) && (!hasharon_flag) && (!center_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortKosherPubList);
-                        theListView.setAdapter(adapter);
-                    } else if (north_flag) {
-                        ArrayList<Pub> kosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                kosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherNorthList);
-                        theListView.setAdapter(adapter);
-                    } else if (hasharon_flag) {
-                        ArrayList<Pub> kosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                kosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    } else if (center_flag) {
-                        ArrayList<Pub> kosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                kosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherCenterList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> kosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                kosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherSouthList);
-                        theListView.setAdapter(adapter);
-                    }
-                } else {
-                    not_kosher_flag = true;
-                    kosher_flag = false;
-                    if ((!north_flag) && (!south_flag) && (!hasharon_flag) && (!center_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortNotKosherPubList);
-                        theListView.setAdapter(adapter);
-                    } else if (north_flag) {
-                        ArrayList<Pub> notKosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                notKosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherNorthList);
-                        theListView.setAdapter(adapter);
-                    } else if (hasharon_flag) {
-                        ArrayList<Pub> notKosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                notKosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    } else if (center_flag) {
-                        ArrayList<Pub> notKosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                notKosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherCenterList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        kosher_flag = false;
-                        not_kosher_flag = true;
-                        ArrayList<Pub> notKosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                notKosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherSouthList);
-                        theListView.setAdapter(adapter);
-                    }
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-
-        });
-
-        areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position2, long id2) {
-                if (id2 == 0) {
-                    north_flag = hasharon_flag = center_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, pub_list);
-                        theListView.setAdapter(adapter);
-                    } else if ((kosher_flag)) {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortKosherPubList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        adapter = new FoldingCellListAdapter(MainActivity.this, sortNotKosherPubList);
-                        theListView.setAdapter(adapter);
-                    }
-
-                } else if (id2 == 1) {
-                    north_flag = true;
-                    hasharon_flag = center_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> north_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("North")) {
-                                north_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, north_list);
-                        theListView.setAdapter(adapter);
-                    } else if ((kosher_flag)) {
-                        ArrayList<Pub> kosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                kosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherNorthList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherNorthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("North")) {
-                                notKosherNorthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherNorthList);
-                        theListView.setAdapter(adapter);
-                    }
-
-                } else if (id2 == 2) {
-                    hasharon_flag = true;
-                    north_flag = center_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> hasharon_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Hasharon")) {
-                                hasharon_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, hasharon_list);
-                        theListView.setAdapter(adapter);
-                    } else if ((kosher_flag)) {
-                        ArrayList<Pub> kosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                kosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherHasharonList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Hasharon")) {
-                                notKosherHasharonList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherHasharonList);
-                        theListView.setAdapter(adapter);
-                    }
-                } else if (id2 == 3) {
-                    center_flag = true;
-                    north_flag = hasharon_flag = south_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> center_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("Center")) {
-                                center_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, center_list);
-                        theListView.setAdapter(adapter);
-                    } else if (kosher_flag) {
-                        ArrayList<Pub> kosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                kosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherCenterList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherCenterList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("Center")) {
-                                notKosherCenterList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherCenterList);
-                        theListView.setAdapter(adapter);
-                    }
-
-                } else {
-                    south_flag = true;
-                    north_flag = hasharon_flag = center_flag = false;
-                    if ((!kosher_flag) && (!not_kosher_flag)) {
-                        ArrayList<Pub> south_list = new ArrayList<Pub>();
-                        for (Pub p : pub_list) {
-                            if (p.getArea().equals("South")) {
-                                south_list.add(p);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, south_list);
-                        theListView.setAdapter(adapter);
-                    } else if (kosher_flag) {
-                        ArrayList<Pub> kosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                kosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, kosherSouthList);
-                        theListView.setAdapter(adapter);
-                    } else {
-                        ArrayList<Pub> notKosherSouthList = new ArrayList<Pub>();
-                        for (Pub pub : sortNotKosherPubList) {
-                            if (pub.getArea().equals("South")) {
-                                notKosherSouthList.add(pub);
-                            }
-                        }
-                        adapter = new FoldingCellListAdapter(MainActivity.this, notKosherSouthList);
-                        theListView.setAdapter(adapter);
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
     }
 
     private void initVariables() {
@@ -398,14 +114,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ObjectsList = new ArrayList<Object>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         fullPubList = new ArrayList<Pub>();
-        sortKosherPubList = new ArrayList<Pub>();
-        sortNotKosherPubList = new ArrayList<Pub>();
-        sortCenterPubList = new ArrayList<Pub>();
         adapter = new FoldingCellListAdapter(this, pub_list);
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Pubs");
-        kosher_flag = not_kosher_flag = north_flag = hasharon_flag = center_flag = south_flag = false;
+        ratingRef = database.getReference().child("Pubs");
         ObjectsList.addAll(tinyDB.getListObject("FavoritesList", Pub.class));
+        for (Object O : ObjectsList) {
+            FavoritesList.add((Pub) O);
+        }
+
     }
 
     private void initViews() {
@@ -460,6 +177,113 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         for (final Pub pub : pub_list) {
+
+            pub.setBtnRatePub(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Dialog dialog = new Dialog(MainActivity.this);
+                    dialog.setContentView(R.layout.rate_dialog_box);
+
+                    TextView pubName = (TextView) dialog.findViewById(R.id.RatingDialogPubName);
+                    dialogRatingBar = (RatingBar) dialog.findViewById(R.id.RatingDialogRatingBar);
+                    dialogUserName = (EditText) dialog.findViewById(R.id.RatingDialogUserName);
+                    dialogComment = (EditText) dialog.findViewById(R.id.RatingDialogComment);
+                    Button sendRate = (Button) dialog.findViewById(R.id.RatingDialogBTN);
+
+                    pubName.setText(pub.getName());
+
+
+                    dialog.show();
+                    Display display = getWindowManager().getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+                    int width = size.x;
+                    int height = size.y;
+                    Window window = dialog.getWindow();
+                    width = Integer.valueOf((int) (width * 0.8));
+                    height = Integer.valueOf((int) (height * 0.75));
+                    window.setLayout(width, height);
+
+                    sendRate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            millisecond = System.currentTimeMillis();
+                            ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
+                            ratingRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    flag = false;
+
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        long timeStamp = tinyDB.getLong(pub.getTitleName(), 0);
+                                        if (String.valueOf(timeStamp).equals(snapshot.getKey())) {
+                                            flag = true;
+                                        }
+
+                                    }
+
+
+                                    if (flag == true) {
+                                        Toast.makeText(getApplicationContext(), "כבר דירגת את הפאב הנוכחי, לא ניתן לדרג פאב פעמיים", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        if (dialogRatingBar.getRating() == 0) {
+                                            Toast.makeText(getApplicationContext(), "אנא דרג את הפאב", Toast.LENGTH_LONG).show();
+                                        } else if (dialogUserName.getText().toString().equals("") || dialogComment.getText().toString().equals("")) {
+                                            Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings").child(String.valueOf(millisecond));
+                                            CommentInfo temp = new CommentInfo(dialogUserName.getText().toString(), dialogComment.getText().toString(), dialogRatingBar.getRating());
+                                            ratingRef.setValue(temp);
+                                            tinyDB.putLong(pub.getTitleName(), millisecond);
+
+                                            ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
+                                            ratingRef.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    int average = 0;
+                                                    int count = 0;
+                                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                                        average += Integer.parseInt(snapshot.child("rating").getValue().toString());
+                                                        count++;
+                                                    }
+                                                    average /= count;
+                                                    ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("RatingAverage");
+                                                    ratingRef.setValue(average);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                            Toast.makeText(getApplicationContext(), "הביקורת נשלחה בהצלחה!", Toast.LENGTH_LONG).show();
+
+                                        }
+
+                                    }
+                                }
+
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+
+                            });
+
+
+//************************************************************************************************************************
+
+                        }
+                    });
+
+
+                }
+            });
+
+        }
+        for (final Pub pub : pub_list) {
             pub.setBtnAddToFavorites(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -486,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
 
+
         }
 
         // set on click event listener to list view
@@ -499,8 +324,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        for (final Pub pub : pub_list) {
-            pub.setBtnRating(new View.OnClickListener() {
+        for (
+                final Pub pub : pub_list) {
+            pub.setBtnComments(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, Ratings.class);
@@ -548,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                pub_list.clear();
                 // reading from FireBase
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Pub temp = new Pub(snapshot.child("Name").getValue().toString(), snapshot.child("TitleName").getValue().toString(),
@@ -564,10 +390,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     pub_list.add(temp);
                     fullPubList.add(temp);
-                    if (temp.getKosher().equals("כשר"))
-                        sortKosherPubList.add(temp);
-                    if (temp.getKosher().equals("לא כשר"))
-                        sortNotKosherPubList.add(temp);
 
                 }
                 if (pub_list.size() != 0) {
@@ -588,12 +410,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setTitleCards() {
         pub_list.sort(new DistanceComparator());
-        sortKosherPubList.sort(new DistanceComparator());
-        sortNotKosherPubList.sort(new DistanceComparator());
-
-        // get our cards list view
-        //final FoldingCellListAdapter adapter = new FoldingCellListAdapter(this, pub_list);
-        // set elements to adapter
         adapter.setFullPubList(pub_list);
         theListView.setAdapter(adapter);
     }
@@ -609,13 +425,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
     }
 
-    private double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    private double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
+    //    private double deg2rad(double deg) {
+    //        return (deg * Math.PI / 180.0);
+    //    }
+    //
+    //    private double rad2deg(double rad) {
+    //        return (rad * 180.0 / Math.PI);
+    //    }
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -707,7 +523,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // If everything is alright then
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_ID) {
@@ -763,13 +580,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //onItemSelected events
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (adapterView.getId()) {
+            case R.id.kosher_Spinner:
+                if (l == 0) {
+                    if (pub_list.size() > 0) {
+                        adapter.setFullPubList(fullPubList);
+                        String s = "כשרות-" + areaSpinner.getSelectedItem().toString();
+                        adapter.getSpinnerFilter().filter(s);
+                    }
+
+                } else if (l == 1) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = "כשר-" + areaSpinner.getSelectedItem().toString();
+                    adapter.getSpinnerFilter().filter(s);
+
+                } else {
+                    adapter.setFullPubList(fullPubList);
+                    String s = "לא כשר-" + areaSpinner.getSelectedItem().toString();
+                    adapter.getSpinnerFilter().filter(s);
+
+                }
+                break;
+
+            case R.id.area_spinner:
+                if (l == 0) {
+                    if (pub_list.size() > 0) {
+                        adapter.setFullPubList(fullPubList);
+                        String s = kosherSpinner.getSelectedItem().toString() + "-איזור";
+                        adapter.getSpinnerFilter().filter(s);
+                    }
+
+                } else if (l == 1) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-צפון";
+                    adapter.getSpinnerFilter().filter(s);
+                } else if (l == 2) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-השרון";
+                    adapter.getSpinnerFilter().filter(s);
+                } else if (l == 3) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-מרכז";
+                    adapter.getSpinnerFilter().filter(s);
+                } else {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-דרום";
+                    adapter.getSpinnerFilter().filter(s);
+                }
+
+                break;
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
     }
+
+
 }
 
 

@@ -129,7 +129,7 @@ public class FavoritesActivity extends AppCompatActivity {
         }
 
         for (final Pub pub : FavoritesList) {
-            pub.setBtnRating(new View.OnClickListener() {
+            pub.setBtnComments(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(FavoritesActivity.this, Ratings.class);
