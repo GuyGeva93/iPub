@@ -48,10 +48,6 @@ public class Ratings extends AppCompatActivity {
         commentsListView = findViewById(R.id.comments_list_view);
 
         readCommentsFromDB();
-
-
-
-
     }
 
     private void readCommentsFromDB() {

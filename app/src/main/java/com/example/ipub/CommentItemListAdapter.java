@@ -43,9 +43,9 @@ public class CommentItemListAdapter extends ArrayAdapter<CommentInfo> {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource , parent , false);
 
-        TextView viewName = (TextView) convertView.findViewById(R.id.comment_item_name);
-        TextView viewComment = (TextView) convertView.findViewById(R.id.comment_item_comment);
-        RatingBar viewRating = (RatingBar) convertView.findViewById(R.id.comment_item_rating_bar);
+        TextView viewName = convertView.findViewById(R.id.comment_item_name);
+        TextView viewComment = convertView.findViewById(R.id.comment_item_comment);
+        RatingBar viewRating = convertView.findViewById(R.id.comment_item_rating_bar);
 
         viewName.setText(name);
         viewComment.setText(comment);
