@@ -5,15 +5,17 @@ public class CommentInfo {
     String name;
     String comment;
     float rating;
+    long timeStamp;
 
     public CommentInfo() {
 
     }
 
-    public CommentInfo(String name, String comment, float rating) {
+    public CommentInfo(String name, String comment, float rating , long timeStamp) {
         this.name = name;
         this.comment = comment;
         this.rating = rating;
+        this.timeStamp = timeStamp;
     }
 
     public String getName() {
@@ -38,5 +40,13 @@ public class CommentInfo {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

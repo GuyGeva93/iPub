@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         kosherSpinner.setOnItemSelectedListener(this);
         areaSpinner.setOnItemSelectedListener(this);
 
-
     }
 
     private void initVariables() {
@@ -233,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
                                         } else {
                                             ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings").child(String.valueOf(millisecond));
-                                            CommentInfo temp = new CommentInfo(dialogUserName.getText().toString(), dialogComment.getText().toString(), dialogRatingBar.getRating());
+                                            CommentInfo temp = new CommentInfo(dialogUserName.getText().toString(), dialogComment.getText().toString(), dialogRatingBar.getRating() ,millisecond);
                                             ratingRef.setValue(temp);
                                             tinyDB.putLong(pub.getTitleName(), millisecond);
 
@@ -590,17 +589,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         adapter.setFullPubList(fullPubList);
                         String s = "כשרות-" + areaSpinner.getSelectedItem().toString();
                         adapter.getSpinnerFilter().filter(s);
+                        adapter.sort(new DistanceComparator());
                     }
 
                 } else if (l == 1) {
                     adapter.setFullPubList(fullPubList);
                     String s = "כשר-" + areaSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
+                    adapter.sort(new DistanceComparator());
+
 
                 } else {
                     adapter.setFullPubList(fullPubList);
                     String s = "לא כשר-" + areaSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
+                    adapter.sort(new DistanceComparator());
+
 
                 }
                 break;
@@ -611,24 +615,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         adapter.setFullPubList(fullPubList);
                         String s = kosherSpinner.getSelectedItem().toString() + "-איזור";
                         adapter.getSpinnerFilter().filter(s);
+                        adapter.sort(new DistanceComparator());
+
                     }
 
                 } else if (l == 1) {
                     adapter.setFullPubList(fullPubList);
                     String s = kosherSpinner.getSelectedItem().toString() + "-צפון";
                     adapter.getSpinnerFilter().filter(s);
+                    adapter.sort(new DistanceComparator());
+
                 } else if (l == 2) {
                     adapter.setFullPubList(fullPubList);
                     String s = kosherSpinner.getSelectedItem().toString() + "-השרון";
                     adapter.getSpinnerFilter().filter(s);
+                    adapter.sort(new DistanceComparator());
+
                 } else if (l == 3) {
                     adapter.setFullPubList(fullPubList);
                     String s = kosherSpinner.getSelectedItem().toString() + "-מרכז";
                     adapter.getSpinnerFilter().filter(s);
+                    adapter.sort(new DistanceComparator());
+
                 } else {
                     adapter.setFullPubList(fullPubList);
                     String s = kosherSpinner.getSelectedItem().toString() + "-דרום";
                     adapter.getSpinnerFilter().filter(s);
+                    adapter.sort(new DistanceComparator());
+
                 }
 
                 break;

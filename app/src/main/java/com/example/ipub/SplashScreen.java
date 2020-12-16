@@ -36,7 +36,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 //move to new activity in 2 seconds
-                startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                startActivity(new Intent(SplashScreen.this, WelcomeSlides.class));
                 SplashScreen.this.finish();
             }
         }, 3500);
