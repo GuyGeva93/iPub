@@ -1,11 +1,15 @@
 package com.example.ipub;
 
 
+import android.view.View;
+
 public class CommentInfo {
-    String name;
-    String comment;
-    float rating;
-    long timeStamp;
+    private String name;
+    private String comment;
+    private float rating;
+    private long timeStamp;
+    private View.OnClickListener btnDeleteComment;
+
 
     public CommentInfo() {
 
@@ -48,5 +52,12 @@ public class CommentInfo {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+    public View.OnClickListener getBtnDeleteComment() {
+        return btnDeleteComment;
+    }
+
+    public void setBtnDeleteComment(View.OnClickListener btnDeleteComment) {
+        this.btnDeleteComment = btnDeleteComment;
     }
 }

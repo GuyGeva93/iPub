@@ -7,22 +7,21 @@
     android:padding="@dimen/activity_padding_horizontal">
 
 
-
     <ImageView
         android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:src="@drawable/profile_image"
-        android:layout_marginRight="-8dp"/>
+        android:layout_marginRight="-8dp"
+        android:src="@drawable/profile_image" />
 
 
     <TextView
         android:id="@+id/comment_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="33dp"
-        android:layout_marginTop="10dp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/comment_item_timestamp"
@@ -39,8 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:textSize="12sp"
-        android:layout_marginRight="38dp"/>
+        android:layout_marginRight="38dp"
+        android:textSize="12sp" />
 
     <RatingBar
         android:id="@+id/comment_item_rating_bar"
@@ -51,8 +50,16 @@
         android:numStars="5"
         android:progressTint="@color/colorPrimary" />
 
-
-
+    <ImageView
+        android:id="@+id/comment_item_delete_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/comment_item_timestamp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:layout_marginTop="15dp"
+        android:visibility="invisible"
+        android:clickable="false"/>
 
 
 </RelativeLayout>

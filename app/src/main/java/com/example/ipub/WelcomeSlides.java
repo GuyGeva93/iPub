@@ -27,7 +27,6 @@ public class WelcomeSlides extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_slides);
         tinyDB = new TinyDB(this);
-        tinyDB.putBoolean("welcomeSlides" , false);
         if(tinyDB.getBoolean("welcomeSlides") == true){
             startActivity(new Intent(WelcomeSlides.this , MainActivity.class));
         }

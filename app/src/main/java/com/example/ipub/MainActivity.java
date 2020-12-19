@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView report, favorites;
     Spinner kosherSpinner;
     Spinner areaSpinner;
+    Spinner starSpinner;
     TinyDB tinyDB;
     long millisecond;
     boolean flag;
@@ -103,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Spinner Item Selected Events
         kosherSpinner.setOnItemSelectedListener(this);
         areaSpinner.setOnItemSelectedListener(this);
+        starSpinner.setOnItemSelectedListener(this);
+
 
     }
 
@@ -125,14 +128,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initViews() {
+        kosherSpinner = findViewById(R.id.kosher_Spinner);
         areaSpinner = findViewById(R.id.area_spinner);
+        starSpinner = findViewById(R.id.star_spinner);
         theListView = findViewById(R.id.list_view);
         report = findViewById(R.id.report_button);
         favorites = findViewById(R.id.favorites_button);
     }
 
     private void initSpinners() {
-        kosherSpinner = findViewById(R.id.kosher_Spinner);
         ArrayAdapter<CharSequence> kosherSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.KosherArray, android.R.layout.simple_spinner_dropdown_item);
         kosherSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         kosherSpinner.setAdapter(kosherSpinnerAdapter);
@@ -140,6 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<CharSequence> areaSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.areaArray, android.R.layout.simple_spinner_dropdown_item);
         areaSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         areaSpinner.setAdapter(areaSpinnerAdapter);
+
+        ArrayAdapter<CharSequence> starSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.StarsArray, android.R.layout.simple_spinner_dropdown_item);
+        starSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        starSpinner.setAdapter(starSpinnerAdapter);
+
     }
 
     private void initListView() {
@@ -180,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pub.setBtnRatePub(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Dialog dialog = new Dialog(MainActivity.this);
+                    final Dialog dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.rate_dialog_box);
 
                     TextView pubName = (TextView) dialog.findViewById(R.id.RatingDialogPubName);
@@ -209,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             millisecond = System.currentTimeMillis();
                             ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
-                            ratingRef.addValueEventListener(new ValueEventListener() {
+                            ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     flag = false;
@@ -232,12 +241,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_LONG).show();
                                         } else {
                                             ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings").child(String.valueOf(millisecond));
-                                            CommentInfo temp = new CommentInfo(dialogUserName.getText().toString(), dialogComment.getText().toString(), dialogRatingBar.getRating() ,millisecond);
+                                            CommentInfo temp = new CommentInfo(dialogUserName.getText().toString(), dialogComment.getText().toString(), dialogRatingBar.getRating(), millisecond);
                                             ratingRef.setValue(temp);
                                             tinyDB.putLong(pub.getTitleName(), millisecond);
 
                                             ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
-                                            ratingRef.addValueEventListener(new ValueEventListener() {
+                                            ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                                     int average = 0;
@@ -257,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                 }
                                             });
                                             Toast.makeText(getApplicationContext(), "הביקורת נשלחה בהצלחה!", Toast.LENGTH_LONG).show();
+                                            dialog.cancel();
 
                                         }
 
@@ -374,6 +384,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 pub_list.clear();
+                fullPubList.clear();
                 // reading from FireBase
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Pub temp = new Pub(snapshot.child("Name").getValue().toString(), snapshot.child("TitleName").getValue().toString(),
@@ -585,66 +596,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (adapterView.getId()) {
             case R.id.kosher_Spinner:
                 if (l == 0) {
-                    if (pub_list.size() > 0) {
-                        adapter.setFullPubList(fullPubList);
-                        String s = "כשרות-" + areaSpinner.getSelectedItem().toString();
-                        adapter.getSpinnerFilter().filter(s);
-                        adapter.sort(new DistanceComparator());
-                    }
+                    adapter.setFullPubList(fullPubList);
+                    String s = "כשרות-" + areaSpinner.getSelectedItem().toString() + "+" + starSpinner.getSelectedItem().toString();
+                    adapter.getSpinnerFilter().filter(s);
 
                 } else if (l == 1) {
                     adapter.setFullPubList(fullPubList);
-                    String s = "כשר-" + areaSpinner.getSelectedItem().toString();
+                    String s = "כשר-" + areaSpinner.getSelectedItem().toString() + "+" + starSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
-                    adapter.sort(new DistanceComparator());
-
 
                 } else {
                     adapter.setFullPubList(fullPubList);
-                    String s = "לא כשר-" + areaSpinner.getSelectedItem().toString();
+                    String s = "לא כשר-" + areaSpinner.getSelectedItem().toString() + "+" + starSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
-                    adapter.sort(new DistanceComparator());
-
 
                 }
                 break;
 
             case R.id.area_spinner:
                 if (l == 0) {
-                    if (pub_list.size() > 0) {
-                        adapter.setFullPubList(fullPubList);
-                        String s = kosherSpinner.getSelectedItem().toString() + "-איזור";
-                        adapter.getSpinnerFilter().filter(s);
-                        adapter.sort(new DistanceComparator());
-
-                    }
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-איזור" + "+" + starSpinner.getSelectedItem().toString();
+                    adapter.getSpinnerFilter().filter(s);
 
                 } else if (l == 1) {
                     adapter.setFullPubList(fullPubList);
-                    String s = kosherSpinner.getSelectedItem().toString() + "-צפון";
+                    String s = kosherSpinner.getSelectedItem().toString() + "-צפון" + "+" + starSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
-                    adapter.sort(new DistanceComparator());
 
                 } else if (l == 2) {
                     adapter.setFullPubList(fullPubList);
-                    String s = kosherSpinner.getSelectedItem().toString() + "-השרון";
+                    String s = kosherSpinner.getSelectedItem().toString() + "-השרון" + "+" + starSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
-                    adapter.sort(new DistanceComparator());
 
                 } else if (l == 3) {
                     adapter.setFullPubList(fullPubList);
-                    String s = kosherSpinner.getSelectedItem().toString() + "-מרכז";
+                    String s = kosherSpinner.getSelectedItem().toString() + "-מרכז" + "+" + starSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
-                    adapter.sort(new DistanceComparator());
 
                 } else {
                     adapter.setFullPubList(fullPubList);
-                    String s = kosherSpinner.getSelectedItem().toString() + "-דרום";
+                    String s = kosherSpinner.getSelectedItem().toString() + "-דרום" + "+" + starSpinner.getSelectedItem().toString();
                     adapter.getSpinnerFilter().filter(s);
-                    adapter.sort(new DistanceComparator());
-
                 }
+                break;
 
+            case R.id.star_spinner:
+                if (l == 0) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-" + areaSpinner.getSelectedItem().toString() + "+דירוג";
+                    adapter.getSpinnerFilter().filter(s);
+                } else if (l == 1) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-" + areaSpinner.getSelectedItem().toString() + "+3";
+                    adapter.getSpinnerFilter().filter(s);
+                } else if (l == 2) {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-" + areaSpinner.getSelectedItem().toString() + "+4";
+                    adapter.getSpinnerFilter().filter(s);
+                } else {
+                    adapter.setFullPubList(fullPubList);
+                    String s = kosherSpinner.getSelectedItem().toString() + "-" + areaSpinner.getSelectedItem().toString() + "+5";
+                    adapter.getSpinnerFilter().filter(s);
+                }
                 break;
         }
     }

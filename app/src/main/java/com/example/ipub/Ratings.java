@@ -33,6 +33,8 @@ public class Ratings extends AppCompatActivity {
     CommentItemListAdapter adapter;
     ArrayList<CommentInfo> commentsList = new ArrayList<CommentInfo>();
     ListView commentsListView;
+    DatabaseReference ratingRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +46,57 @@ public class Ratings extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
         tinyDB = new TinyDB(this);
-        adapter = new CommentItemListAdapter(this , R.layout.comment_item ,commentsList);
+        adapter = new CommentItemListAdapter(this, R.layout.comment_item, commentsList);
         commentsListView = findViewById(R.id.comments_list_view);
+        adapter.setPub_name(pub_name);
 
         readCommentsFromDB();
+
+
     }
+
+    private void deleteComment(final long timeStamp) {
+        mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
+
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mRef.child(timeStamp + "").removeValue();
+                recalculateRating();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
+
+    }
+
+    private void recalculateRating() {
+        ratingRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
+        ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int average = 0;
+                int count = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    average += Integer.parseInt(snapshot.child("rating").getValue().toString());
+                    count++;
+                }
+                average /= count;
+                ratingRef = database.getReference().child("Pubs").child(pub_name).child("RatingAverage");
+                ratingRef.setValue(average);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     private void readCommentsFromDB() {
 
@@ -56,12 +104,11 @@ public class Ratings extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 commentsList.clear();
-                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     CommentInfo temp = dataSnapshot.getValue(CommentInfo.class);
                     commentsList.add(temp);
                 }
-                adapter.SetList(commentsList);
-                commentsListView.setAdapter(adapter);
+                setComments();
 
             }
 
@@ -72,6 +119,23 @@ public class Ratings extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void setComments() {
+
+        for (final CommentInfo c : commentsList) {
+            c.setBtnDeleteComment(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(), "התגובה נמחקה בהצלחה", Toast.LENGTH_LONG).show();
+                    deleteComment(c.getTimeStamp());
+
+                }
+            });
+        }
+
+        adapter.SetList(commentsList);
+        commentsListView.setAdapter(adapter);
     }
 
 

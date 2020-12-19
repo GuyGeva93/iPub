@@ -13,27 +13,33 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:weightSum="3"
         android:orientation="horizontal"
-        >
+        android:weightSum="3">
 
-        <TextView
+        <!--        <TextView-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:text="סנן לפי:"-->
+        <!--            android:gravity="center"/>-->
+
+        <Spinner
+            android:id="@+id/star_spinner"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="סנן לפי:"
-            android:gravity="center"/>
+            android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/kosher_Spinner"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
+
         <Spinner
             android:id="@+id/area_spinner"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
 
     </LinearLayout>
@@ -43,8 +49,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="8"
-        android:dividerHeight="5dp"
-        android:divider="@android:color/white"/>
+        android:divider="@android:color/white"
+        android:dividerHeight="5dp" />
 
     <!--    footer-->
     <LinearLayout

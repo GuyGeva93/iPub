@@ -73,6 +73,8 @@ public class ReportActivity extends AppCompatActivity {
         javaMailAPI.execute();
 
         Toast.makeText(getApplicationContext() ,"ההודעה נשלחה בהצלחה" ,Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(ReportActivity.this , MainActivity.class);
+        startActivity(i);
     }
 
 }
