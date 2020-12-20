@@ -22,7 +22,7 @@ import com.ramotion.foldingcell.FoldingCell;
 
 import java.util.ArrayList;
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoritesActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView home, report;
     ListView listView;
@@ -36,6 +36,16 @@ public class FavoritesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
+        initVariables();
+
+        report.setOnClickListener(this);
+        home.setOnClickListener(this);
+
+        setTitleCards();
+        initListView();
+    }
+
+    private void initVariables() {
         listView = findViewById(R.id.fav_list_view);
         home = findViewById(R.id.home_button);
         report = findViewById(R.id.report_button);
@@ -49,25 +59,6 @@ public class FavoritesActivity extends AppCompatActivity {
         }
 
         adapter = new FoldingCellListAdapter(this, FavoritesList);
-
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FavoritesActivity.this, MainActivity.class);
-                startActivity(i);
-            }
-        });
-
-        report.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FavoritesActivity.this, ReportActivity.class);
-                startActivity(i);
-            }
-        });
-
-        setTitleCards();
-        initListView();
     }
 
     public void setTitleCards() {
@@ -150,6 +141,18 @@ public class FavoritesActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.home_button:
+                startActivity(new Intent(FavoritesActivity.this, MainActivity.class));
+                break;
+            case R.id.report_button:
+                startActivity(new Intent(FavoritesActivity.this, ReportActivity.class));
+                break;
+        }
     }
 
     private void makePhoneCall(String tel) {

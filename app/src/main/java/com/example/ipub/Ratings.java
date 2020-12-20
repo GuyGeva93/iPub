@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class Ratings extends AppCompatActivity {
 
-
     String pub_name;
     FirebaseDatabase database;
     DatabaseReference mRef;
@@ -40,8 +39,11 @@ public class Ratings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ratings);
+        initVariables();
+        readCommentsFromDB();
+    }
 
-
+    private void initVariables() {
         pub_name = getIntent().getStringExtra("pub_name");
         database = FirebaseDatabase.getInstance();
         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
@@ -49,10 +51,6 @@ public class Ratings extends AppCompatActivity {
         adapter = new CommentItemListAdapter(this, R.layout.comment_item, commentsList);
         commentsListView = findViewById(R.id.comments_list_view);
         adapter.setPub_name(pub_name);
-
-        readCommentsFromDB();
-
-
     }
 
     private void deleteComment(final long timeStamp) {
@@ -74,6 +72,7 @@ public class Ratings extends AppCompatActivity {
 
     }
 
+    /* recalculating rating after new rating added*/
     private void recalculateRating() {
         ratingRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
         ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -85,7 +84,7 @@ public class Ratings extends AppCompatActivity {
                     average += Integer.parseInt(snapshot.child("rating").getValue().toString());
                     count++;
                 }
-                if(count > 0 ){
+                if (count > 0) {
                     average /= count;
                 }
                 ratingRef = database.getReference().child("Pubs").child(pub_name).child("RatingAverage");
@@ -98,7 +97,6 @@ public class Ratings extends AppCompatActivity {
             }
         });
     }
-
 
     private void readCommentsFromDB() {
 

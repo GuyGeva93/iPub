@@ -25,8 +25,6 @@ public class SplashScreen extends AppCompatActivity {
         Animation bottom_animation = AnimationUtils.loadAnimation(this , R.anim.bottom_animation);
         Animation top_animation = AnimationUtils.loadAnimation(this , R.anim.top_animation);
 
-
-
         ipub.setAnimation(bottom_animation);
         splashImage.setAnimation(top_animation);
 

@@ -3,6 +3,8 @@ package com.example.ipub;
 
 import android.view.View;
 
+/*comment class for the rating comments.*/
+
 public class CommentInfo {
     private String name;
     private String comment;
@@ -10,12 +12,10 @@ public class CommentInfo {
     private long timeStamp;
     private View.OnClickListener btnDeleteComment;
 
-
     public CommentInfo() {
-
     }
 
-    public CommentInfo(String name, String comment, float rating , long timeStamp) {
+    public CommentInfo(String name, String comment, float rating, long timeStamp) {
         this.name = name;
         this.comment = comment;
         this.rating = rating;
@@ -53,6 +53,7 @@ public class CommentInfo {
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
+
     public View.OnClickListener getBtnDeleteComment() {
         return btnDeleteComment;
     }
