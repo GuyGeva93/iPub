@@ -85,7 +85,9 @@ public class Ratings extends AppCompatActivity {
                     average += Integer.parseInt(snapshot.child("rating").getValue().toString());
                     count++;
                 }
-                average /= count;
+                if(count > 0 ){
+                    average /= count;
+                }
                 ratingRef = database.getReference().child("Pubs").child(pub_name).child("RatingAverage");
                 ratingRef.setValue(average);
             }

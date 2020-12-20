@@ -16,12 +16,6 @@
         android:orientation="horizontal"
         android:weightSum="3">
 
-        <!--        <TextView-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:layout_weight="1"-->
-        <!--            android:text="סנן לפי:"-->
-        <!--            android:gravity="center"/>-->
 
         <Spinner
             android:id="@+id/star_spinner"
@@ -100,5 +94,6 @@
             android:textColor="#ffffff" />
 
     </LinearLayout>
+
 
 </LinearLayout>

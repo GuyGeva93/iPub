@@ -333,12 +333,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        for (
-                final Pub pub : pub_list) {
+        for (final Pub pub : pub_list) {
             pub.setBtnComments(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, Ratings.class);
+                    intent.putExtra("pub_name", pub.getTitleName());
+                    startActivity(intent);
+                }
+            });
+        }
+
+        for (final Pub pub : pub_list) {
+            pub.setBtnGallery(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
                     intent.putExtra("pub_name", pub.getTitleName());
                     startActivity(intent);
                 }
