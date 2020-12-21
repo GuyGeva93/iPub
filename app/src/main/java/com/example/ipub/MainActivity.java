@@ -37,6 +37,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -45,6 +47,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +62,7 @@ import static java.lang.Math.acos;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     private int LOCATION_PERMISSION_CODE = 1;
     private static final int REQUEST_CALL = 1;
@@ -86,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText dialogComment;
     EditText dialogUserName;
     RatingBar dialogRatingBar;
-
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         kosherSpinner.setOnItemSelectedListener(this);
         areaSpinner.setOnItemSelectedListener(this);
         starSpinner.setOnItemSelectedListener(this);
-
+        navigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -124,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (Object O : ObjectsList) {
             FavoritesList.add((Pub) O);
         }
+        navigationView.bringToFront();
 
     }
 
@@ -134,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         theListView = findViewById(R.id.list_view);
         report = findViewById(R.id.report_button);
         favorites = findViewById(R.id.favorites_button);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
     }
 
     private void initSpinners() {
@@ -678,6 +685,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void onBackPressed() {
+
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+        }
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.nav_admin_login:
+                startActivity(new Intent(MainActivity.this , AdminLogin.class));
+                break;
+
+        }
+
+        return true;
+    }
 }
 
 
