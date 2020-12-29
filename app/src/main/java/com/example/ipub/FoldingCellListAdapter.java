@@ -38,7 +38,7 @@ import androidx.core.content.ContextCompat;
 import org.w3c.dom.Text;
 
 /**
- * Simple example of ListAdapter for using with Folding Cell
+ * ListAdapter for using with Folding Cell
  * Adapter holds indexes of unfolded elements for correct work with default reusable views behavior
  */
 @SuppressWarnings({"WeakerAccess", "unused"})

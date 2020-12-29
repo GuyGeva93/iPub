@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*comment adapter for the rating comments.*/
 
 public class CommentItemListAdapter extends ArrayAdapter<CommentInfo> {
 
