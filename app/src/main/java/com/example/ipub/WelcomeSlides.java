@@ -27,8 +27,9 @@ public class WelcomeSlides extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_slides);
         tinyDB = new TinyDB(this);
-        if(tinyDB.getBoolean("welcomeSlides") == true){
-            startActivity(new Intent(WelcomeSlides.this , MainActivity.class));
+        //tinyDB.putBoolean("welcomeSlides", false);
+        if (tinyDB.getBoolean("welcomeSlides") == true) {
+            startActivity(new Intent(WelcomeSlides.this, MainActivity.class));
         }
 
         layoutSlidesIndicators = findViewById(R.id.WelcomeSlidesLayoutIndicators);
@@ -54,12 +55,11 @@ public class WelcomeSlides extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(WelcomeSlidesViewPager.getCurrentItem()+1 < welcomeSlidesAdapter.getItemCount()) {
-                    WelcomeSlidesViewPager.setCurrentItem(WelcomeSlidesViewPager.getCurrentItem()+1);
-                }
-                else {
-                    tinyDB.putBoolean("welcomeSlides" , true);
-                    startActivity(new Intent(WelcomeSlides.this , MainActivity.class));
+                if (WelcomeSlidesViewPager.getCurrentItem() + 1 < welcomeSlidesAdapter.getItemCount()) {
+                    WelcomeSlidesViewPager.setCurrentItem(WelcomeSlidesViewPager.getCurrentItem() + 1);
+                } else {
+                    tinyDB.putBoolean("welcomeSlides", true);
+                    startActivity(new Intent(WelcomeSlides.this, MainActivity.class));
                     finish();
                 }
             }
@@ -67,7 +67,7 @@ public class WelcomeSlides extends AppCompatActivity {
 
     }
 
-    private void setupWelcomeSlidesItems(){
+    private void setupWelcomeSlidesItems() {
 
         List<WelcomeSlidesItem> welcomeSlidesItems = new ArrayList<>();
         WelcomeSlidesItem slide1 = new WelcomeSlidesItem();
@@ -81,38 +81,43 @@ public class WelcomeSlides extends AppCompatActivity {
         slide2.setImage(R.drawable.slide_navigate_image);
 
         WelcomeSlidesItem slide3 = new WelcomeSlidesItem();
-        slide3.setTitle("פאבים על רמה");
-        slide3.setDescription("חפש פאבים על פי דירוג גבוה! ");
+        slide3.setTitle("דירוג פאבים");
+        slide3.setDescription("ראה דירוגים של אחרים ודרג בעצמך!");
         slide3.setImage(R.drawable.slide_image_star);
 
         WelcomeSlidesItem slide4 = new WelcomeSlidesItem();
         slide4.setTitle("אפשרויות סינון");
-        slide4.setDescription("סנן את החיפוש על פי אזורים וכשרויות ");
+        slide4.setDescription("סנן את החיפוש על פי אזורים, כשרויות ודירוג");
         slide4.setImage(R.drawable.slides_image_filter);
 
         WelcomeSlidesItem slide5 = new WelcomeSlidesItem();
-        slide5.setTitle("בוא נתחיל!");
-        slide5.setImage(R.drawable.slide_image_start);
+        slide5.setTitle("מנהל פאב?");
+        slide5.setDescription("צור קשר וקבל גישה לדף ניהול אישי לפאב שלך!");
+        slide5.setImage(R.drawable.slide_image_manager);
 
+        WelcomeSlidesItem slide6 = new WelcomeSlidesItem();
+        slide6.setTitle("בוא נתחיל!");
+        slide6.setImage(R.drawable.slide_image_start);
 
         welcomeSlidesItems.add(slide1);
         welcomeSlidesItems.add(slide2);
         welcomeSlidesItems.add(slide3);
         welcomeSlidesItems.add(slide4);
         welcomeSlidesItems.add(slide5);
+        welcomeSlidesItems.add(slide6);
 
-        welcomeSlidesAdapter  = new WelcomeSlidesAdapter(welcomeSlidesItems);
+        welcomeSlidesAdapter = new WelcomeSlidesAdapter(welcomeSlidesItems);
 
     }
 
-    private void setupSlidesIndicators(){
+    private void setupSlidesIndicators() {
         ImageView[] indicators = new ImageView[welcomeSlidesAdapter.getItemCount()];
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(8,0,8,0);
-        for(int i = 0 ; i<indicators.length ; i++){
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(8, 0, 8, 0);
+        for (int i = 0; i < indicators.length; i++) {
             indicators[i] = new ImageView(getApplicationContext());
             indicators[i].setImageDrawable(ContextCompat.getDrawable(
-                    getApplicationContext() ,
+                    getApplicationContext(),
                     R.drawable.slides_indicator_inactive
             ));
             indicators[i].setLayoutParams(layoutParams);
@@ -120,25 +125,23 @@ public class WelcomeSlides extends AppCompatActivity {
         }
     }
 
-    private void setCurrentSlideIndicator(int index){
+    private void setCurrentSlideIndicator(int index) {
         int childCount = layoutSlidesIndicators.getChildCount();
-        for(int i = 0 ; i < childCount ; i++){
-            ImageView imageView = (ImageView)layoutSlidesIndicators.getChildAt(i);
-            if(i == index){
+        for (int i = 0; i < childCount; i++) {
+            ImageView imageView = (ImageView) layoutSlidesIndicators.getChildAt(i);
+            if (i == index) {
                 imageView.setImageDrawable(
-                        ContextCompat.getDrawable(getApplicationContext() , R.drawable.slides_indicator_active)
+                        ContextCompat.getDrawable(getApplicationContext(), R.drawable.slides_indicator_active)
                 );
-            }
-            else{
+            } else {
                 imageView.setImageDrawable(
-                        ContextCompat.getDrawable(getApplicationContext() , R.drawable.slides_indicator_inactive)
+                        ContextCompat.getDrawable(getApplicationContext(), R.drawable.slides_indicator_inactive)
                 );
             }
         }
-        if(index == welcomeSlidesAdapter.getItemCount()-1){
+        if (index == welcomeSlidesAdapter.getItemCount() - 1) {
             button.setText("התחל");
-        }
-        else{
+        } else {
             button.setText("הבא");
         }
 

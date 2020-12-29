@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,11 +33,16 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.core.app.ActivityCompat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -45,6 +51,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -59,7 +67,7 @@ import static java.lang.Math.acos;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     private int LOCATION_PERMISSION_CODE = 1;
     private static final int REQUEST_CALL = 1;
@@ -86,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText dialogComment;
     EditText dialogUserName;
     RatingBar dialogRatingBar;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle mToggle;
+    NavigationView navigationView;
+    FirebaseAuth mAuth;
+
 
 
     @Override
@@ -97,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initSpinners();
         getDataFromDB();
 
+
         //onClickEvents
         report.setOnClickListener(this);
         favorites.setOnClickListener(this);
@@ -106,8 +120,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         areaSpinner.setOnItemSelectedListener(this);
         starSpinner.setOnItemSelectedListener(this);
 
+        navigationView.setNavigationItemSelectedListener( this);
 
     }
+
 
     private void initVariables() {
         pub_list = new ArrayList<Pub>();
@@ -124,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (Object O : ObjectsList) {
             FavoritesList.add((Pub) O);
         }
+        navigationView.bringToFront();
+        mAuth = FirebaseAuth.getInstance();
+
 
     }
 
@@ -134,6 +153,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         theListView = findViewById(R.id.list_view);
         report = findViewById(R.id.report_button);
         favorites = findViewById(R.id.favorites_button);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        mToggle = new ActionBarDrawerToggle(this , drawerLayout , R.string.open ,R.string.close );
+        drawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(mToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initSpinners() {
@@ -333,12 +368,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        for (
-                final Pub pub : pub_list) {
+        for (final Pub pub : pub_list) {
             pub.setBtnComments(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, Ratings.class);
+                    intent.putExtra("pub_name", pub.getTitleName());
+                    startActivity(intent);
+                }
+            });
+        }
+
+        for (final Pub pub : pub_list) {
+            pub.setBtnGallery(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, GalleryActivity.class);
                     intent.putExtra("pub_name", pub.getTitleName());
                     startActivity(intent);
                 }
@@ -668,6 +713,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void onBackPressed() {
+
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else {
+            super.onBackPressed();
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(mAuth.getCurrentUser() != null){
+            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_update_pub);
+            menuItem.setVisible(true);
+            MenuItem menuItem1 = navigationView.getMenu().findItem(R.id.nav_signout);
+            menuItem1.setVisible(true);
+            MenuItem menuItem2 = navigationView.getMenu().findItem(R.id.nav_admin_login);
+            menuItem2.setVisible(false);
+
+
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+
+            case R.id.nav_admin_login:
+                startActivity(new Intent(MainActivity.this , AdminLogin.class));
+                break;
+            case R.id.nav_signout:
+                mAuth.signOut();
+                MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_update_pub);
+                menuItem.setVisible(false);
+                MenuItem menuItem1 = navigationView.getMenu().findItem(R.id.nav_signout);
+                menuItem1.setVisible(false);
+                MenuItem menuItem2 = navigationView.getMenu().findItem(R.id.nav_admin_login);
+                menuItem2.setVisible(true);
+                break;
+            case R.id.nav_update_pub:
+                startActivity(new Intent(MainActivity.this , ManagementPubsList.class));
+                break;
+            case R.id.nav_ask_admin:
+                startActivity(new Intent(MainActivity.this, AdminRequest.class));
+                break;
+
+
+        }
+
+        return true;
+    }
 }
 
 

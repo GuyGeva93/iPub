@@ -97,6 +97,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.btnAddToFavorites = cell.findViewById(R.id.btn_content_favorites);
             viewHolder.btnComment = cell.findViewById(R.id.btn_comments);
             viewHolder.btnRatePub = cell.findViewById(R.id.btn_rate);
+            viewHolder.btnGallery = cell.findViewById(R.id.btn_gallery);
 
             //Opening hours
             viewHolder.sunday_hours = cell.findViewById(R.id.sunday_hours);
@@ -177,6 +178,10 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
             viewHolder.btnRatePub.setOnClickListener(pub.getBtnRatePub());
         }
 
+        if(pub.getBtnGallery() !=null){
+            viewHolder.btnGallery.setOnClickListener(pub.getBtnGallery());
+        }
+
         return cell;
     }
 
@@ -226,6 +231,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
         TextView contentRequestBtn;
         TextView btnComment;
         TextView btnRatePub;
+        TextView btnGallery;
         ImageView btnGoToWebsite;
         ImageView btnNavigateToPub;
         ImageView btnAddToFavorites;

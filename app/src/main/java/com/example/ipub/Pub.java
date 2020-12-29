@@ -18,6 +18,7 @@ public class Pub {
     private View.OnClickListener btnNavigateTopub;
     private View.OnClickListener btnAddToFavorites;
     private View.OnClickListener btnComments;
+    private View.OnClickListener btnGallery;
 
 
 
@@ -238,6 +239,15 @@ public class Pub {
 
     public void setArea(String area) {
         Area = area;
+    }
+
+
+    public View.OnClickListener getBtnGallery() {
+        return btnGallery;
+    }
+
+    public void setBtnGallery(View.OnClickListener btnGallery) {
+        this.btnGallery = btnGallery;
     }
 
 
