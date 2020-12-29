@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <group android:checkableBehavior="single">
+
+
+
+        <item
+            android:id="@+id/nav_admin_login"
+            android:title="התחברות מנהל"
+            android:icon="@drawable/ic_admin_login"/>
+
+        <item
+            android:id="@+id/nav_report_new_pub"
+            android:title="פאב חסר?"
+            android:icon="@drawable/ic_add_business"/>
+        <item
+            android:id="@+id/nav_ask_admin"
+            android:title="אחד הפאבים ברשותך?"
+            android:icon="@drawable/ic_person_add"/>
+
+        <item
+            android:id="@+id/nav_update_pub"
+            android:title="עריכת פאב"
+            android:visible="false"
+            android:icon="@drawable/ic_edit"/>
+
+        <item
+            android:id="@+id/nav_signout"
+            android:title="התנתק"
+            android:visible="false"
+            android:icon="@drawable/ic_logout"/>
+
+    </group>
+
+</menu>

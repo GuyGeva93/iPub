@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="12"
+    tools:context=".EditPub">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"
+            android:text="שעות פתיחה"
+            android:gravity="right"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"
+            android:text="שעות סגירה"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום א':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/sunday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/sunday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/sunday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום ב':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/monday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/monday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/monday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום ג':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/tuesday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/tuesday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/tuesday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום ד':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/wednesday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/wednesday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/wednesday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום ה':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/thursday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/thursday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/thursday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום ו':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/friday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/friday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/friday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="יום ש':"
+            android:gravity="center"/>
+
+        <Spinner
+            android:id="@+id/saturday_open"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+        <Spinner
+            android:id="@+id/saturday_close"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.75"/>
+
+        <CheckBox
+            android:id="@+id/saturday_checkBox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:hint="סגור"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="טלפון:"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/pub_management_phoneEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="8">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:text="אתר:"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/pub_management_websiteEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/pub_management_update_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="עדכן פרטים"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/pub_management_gallery_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="לגלריית התמונות"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
