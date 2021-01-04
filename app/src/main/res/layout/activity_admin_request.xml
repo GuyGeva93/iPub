@@ -33,10 +33,10 @@
             android:id="@+id/admin_request_name"
             android:layout_width="800px"
             android:layout_height="100px"
-            android:background="@drawable/input_field"
             android:ems="10"
             android:hint="שם מלא"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -49,10 +49,10 @@
             android:id="@+id/admin_request_pub_name"
             android:layout_width="800px"
             android:layout_height="100px"
-            android:background="@drawable/input_field"
             android:ems="10"
             android:hint="שם הפאב"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -65,10 +65,10 @@
             android:id="@+id/admin_request_email"
             android:layout_width="800px"
             android:layout_height="100px"
-            android:background="@drawable/input_field"
             android:ems="10"
             android:hint="כתובת מייל"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -81,10 +81,10 @@
             android:id="@+id/admin_request_phone"
             android:layout_width="800px"
             android:layout_height="100px"
-            android:background="@drawable/input_field"
             android:ems="10"
             android:hint="טלפון"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textSize="12sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -97,7 +97,6 @@
             android:id="@+id/admin_request_send_btn"
             android:layout_width="400px"
             android:layout_height="150px"
-            android:background="@drawable/button_send"
             android:fontFamily="sans-serif-condensed-medium"
             android:text="שלח"
             android:textSize="18sp" />

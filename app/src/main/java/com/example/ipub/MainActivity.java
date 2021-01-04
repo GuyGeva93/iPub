@@ -764,6 +764,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.nav_ask_admin:
                 startActivity(new Intent(MainActivity.this, AdminRequest.class));
                 break;
+            case R.id.nav_report_new_pub:
+                startActivity(new Intent(MainActivity.this, AddPubRequest.class));
+                break;
 
 
         }
