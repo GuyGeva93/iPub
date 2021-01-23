@@ -3,15 +3,9 @@ package com.example.ipub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.media.Rating;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,11 +14,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Ratings extends AppCompatActivity {
-
 
     String pub_name;
     FirebaseDatabase database;
@@ -41,17 +33,22 @@ public class Ratings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ratings);
 
+        initVariables();
+        initViews();
+        readCommentsFromDB();
+    }
 
+    private void initViews() {
+        commentsListView = findViewById(R.id.comments_list_view);
+    }
+
+    private void initVariables() {
         pub_name = getIntent().getStringExtra("pub_name");
         database = FirebaseDatabase.getInstance();
         mRef = database.getReference().child("Pubs").child(pub_name).child("Ratings");
         tinyDB = new TinyDB(this);
         adapter = new CommentItemListAdapter(this, R.layout.comment_item, commentsList);
-        commentsListView = findViewById(R.id.comments_list_view);
         adapter.setPub_name(pub_name);
-
-        readCommentsFromDB();
-
 
     }
 
@@ -85,7 +82,7 @@ public class Ratings extends AppCompatActivity {
                     average += Integer.parseInt(snapshot.child("rating").getValue().toString());
                     count++;
                 }
-                if(count > 0 ){
+                if (count > 0) {
                     average /= count;
                 }
                 ratingRef = database.getReference().child("Pubs").child(pub_name).child("RatingAverage");

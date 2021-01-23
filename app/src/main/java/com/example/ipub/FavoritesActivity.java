@@ -8,19 +8,16 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -58,10 +55,10 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_favorites);
         initVariables();
         initViews();
-        home.setOnClickListener(this);
-        report.setOnClickListener(this);
         setTitleCards();
         initListView();
+        home.setOnClickListener(this);
+        report.setOnClickListener(this);
     }
 
     private void initViews() {
@@ -87,7 +84,6 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
     public void setTitleCards() {
         FavoritesList.sort(new DistanceComparator());
         // get our cards list view
-        //final FoldingCellListAdapter adapter = new FoldingCellListAdapter(this, pub_list);
         // set elements to adapter
         adapter.setFullPubList(FavoritesList);
         listView.setAdapter(adapter);
@@ -260,9 +256,6 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
                                 }
 
                             });
-
-
-//************************************************************************************************************************
 
                         }
                     });

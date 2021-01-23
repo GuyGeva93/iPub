@@ -1,6 +1,12 @@
 package com.example.ipub;
 
 public class WelcomeSlidesItem {
+
+    private int image;
+    private String title;
+    private  String description;
+
+
     public int getImage() {
         return image;
     }
@@ -24,9 +30,5 @@ public class WelcomeSlidesItem {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    private int image;
-    private String title;
-    private  String description;
 
 }

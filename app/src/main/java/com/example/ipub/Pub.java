@@ -241,7 +241,6 @@ public class Pub {
         Area = area;
     }
 
-
     public View.OnClickListener getBtnGallery() {
         return btnGallery;
     }

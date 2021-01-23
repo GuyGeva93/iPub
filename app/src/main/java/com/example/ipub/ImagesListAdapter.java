@@ -1,7 +1,6 @@
 package com.example.ipub;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -34,7 +33,6 @@ public class ImagesListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        //return mThumbIds.get(position);
         return 1;
     }
 
@@ -51,7 +49,6 @@ public class ImagesListAdapter extends BaseAdapter {
         }
 
         Picasso.get().load(mThumbIds.get(position)).into(imageView);
-        //imageView.setImageURI(mThumbIds.get(position));
 
         return imageView;
     }

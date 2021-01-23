@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 public class AdminRequest extends AppCompatActivity implements View.OnClickListener {
 
     EditText admin_request_name;

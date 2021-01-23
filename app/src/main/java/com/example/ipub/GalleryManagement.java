@@ -5,20 +5,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -60,7 +57,6 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery_mangement);
 
-
         initVariables();
         initViews();
         downloadImages();
@@ -78,11 +74,6 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
-//                        for (StorageReference prefix : listResult.getPrefixes()) {
-//                            // All the prefixes under listRef.
-//                            // You may call listAll() recursively on them.
-//                        }
-
                         for (StorageReference item : listResult.getItems()) {
                             //  All the items under listRef.
                             item.getDownloadUrl()
@@ -108,14 +99,11 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
 
 
                         }
-
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Uh-oh, an error occurred!
                     }
                 });
 
@@ -126,14 +114,11 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
         storageRef = FirebaseStorage.getInstance().getReference();
         pubName = getIntent().getStringExtra("pubName");
         uriList = new ArrayList<>();
-
-
     }
 
     private void initViews() {
         uploadImageBtn = findViewById(R.id.uploadImageBtn);
         gridView = findViewById(R.id.gallery_management_gridView);
-
     }
 
     public void pickImageFromGallery() {
@@ -192,7 +177,6 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
                 });
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -228,8 +212,6 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
 
         String uriString = uriList.get(position);
         ShowDialogBox(uriString);
-
-
     }
 
     private void ShowDialogBox(final String uriString) {
@@ -251,11 +233,8 @@ public class GalleryManagement extends AppCompatActivity implements View.OnClick
                 adapter.notifyDataSetChanged();
                 gridView.setAdapter(adapter);
                 dialog.cancel();
-
-
             }
         });
-
 
         dialog.show();
     }

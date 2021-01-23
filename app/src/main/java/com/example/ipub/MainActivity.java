@@ -2,12 +2,9 @@ package com.example.ipub;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
@@ -16,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
-import android.text.Layout;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,10 +29,8 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.core.app.ActivityCompat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,7 +55,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.ramotion.foldingcell.FoldingCell;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Math.acos;
 import static java.lang.Math.cos;
@@ -110,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initSpinners();
         getDataFromDB();
 
-
         //onClickEvents
         report.setOnClickListener(this);
         favorites.setOnClickListener(this);
@@ -121,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         starSpinner.setOnItemSelectedListener(this);
 
         navigationView.setNavigationItemSelectedListener( this);
-
     }
 
 
@@ -137,13 +128,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myRef = database.getReference().child("Pubs");
         ratingRef = database.getReference().child("Pubs");
         ObjectsList.addAll(tinyDB.getListObject("FavoritesList", Pub.class));
+
         for (Object O : ObjectsList) {
             FavoritesList.add((Pub) O);
         }
+
         navigationView.bringToFront();
         mAuth = FirebaseAuth.getInstance();
-
-
     }
 
     private void initViews() {
@@ -302,12 +293,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             });
                                             Toast.makeText(getApplicationContext(), "הביקורת נשלחה בהצלחה!", Toast.LENGTH_LONG).show();
                                             dialog.cancel();
-
                                         }
-
                                     }
                                 }
-
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
@@ -315,9 +303,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
 
                             });
-
-
-//************************************************************************************************************************
 
                         }
                     });
@@ -353,8 +338,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
             });
-
-
         }
 
         // set on click event listener to list view
@@ -450,7 +433,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (pub_list.size() != 0) {
                     initListView();
                 }
-
             }
 
             @Override
@@ -479,14 +461,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
     }
-
-    //    private double deg2rad(double deg) {
-    //        return (deg * Math.PI / 180.0);
-    //    }
-    //
-    //    private double rad2deg(double rad) {
-    //        return (rad * 180.0 / Math.PI);
-    //    }
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -559,9 +533,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean checkPermissions() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        // If we want background location
-        // on Android 10.0 and higher:
-        // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
     // method to request for permissions
@@ -620,7 +591,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         return true;
     }
-
 
     // onClick events
     @Override
@@ -767,8 +737,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.nav_report_new_pub:
                 startActivity(new Intent(MainActivity.this, AddPubRequest.class));
                 break;
-
-
         }
 
         return true;
