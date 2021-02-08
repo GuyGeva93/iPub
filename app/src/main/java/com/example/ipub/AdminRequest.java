@@ -41,12 +41,19 @@ public class AdminRequest extends AppCompatActivity implements View.OnClickListe
             case R.id.admin_request_send_btn:
                 if (admin_request_name.getText().toString().equals("") || admin_request_pub_name.getText().toString().equals("") ||
                         admin_request_email.getText().toString().equals("") || admin_request_phone.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "בבקשה מלא את כל השדות", Toast.LENGTH_SHORT).show();
-                } else {
+                    Toast.makeText(getApplicationContext(), "אנא מלא את כל השדות", Toast.LENGTH_SHORT).show();
+                }
+
+                // Phone validation
+                else if (admin_request_phone.getText().toString().length() != 10) {
+                    Toast.makeText(getApplicationContext(), "אנא הזן מספר נייד חוקי", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     sendEmail();
                 }
                 break;
         }
+
     }
 
     private void sendEmail() {

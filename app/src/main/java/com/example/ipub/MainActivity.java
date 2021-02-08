@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         areaSpinner.setOnItemSelectedListener(this);
         starSpinner.setOnItemSelectedListener(this);
 
-        navigationView.setNavigationItemSelectedListener( this);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    // Initialize spinners for sorting the pubs by kosher, area and rating
     private void initSpinners() {
         ArrayAdapter<CharSequence> kosherSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.KosherArray, android.R.layout.simple_spinner_dropdown_item);
         kosherSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // Initialize main view
     private void initListView() {
 
         // method to get the location
@@ -212,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         for (final Pub pub : pub_list) {
 
+            // Dialog window to rate a pub
             pub.setBtnRatePub(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -226,9 +229,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     pubName.setText(pub.getName());
 
-
                     dialog.show();
                     Display display = getWindowManager().getDefaultDisplay();
+                    // Setting the dialog window size
                     Point size = new Point();
                     display.getSize(size);
                     int width = size.x;
@@ -238,6 +241,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     height = Integer.valueOf((int) (height * 0.75));
                     window.setLayout(width, height);
 
+                    // When clicking rate, we are taking the timestamp for future comment delete by the user who created the comment.
+                    // Also taking all the information such as name, rate and full comment
                     sendRate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -256,7 +261,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         }
 
                                     }
-
 
                                     if (flag == true) {
                                         Toast.makeText(getApplicationContext(), "כבר דירגת את הפאב הנוכחי, לא ניתן לדרג פאב פעמיים", Toast.LENGTH_LONG).show();

@@ -63,6 +63,7 @@ public class AdminLogin extends AppCompatActivity implements View.OnClickListene
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             startActivity(new Intent(AdminLogin.this, MainActivity.class));
+                            Toast.makeText(getApplicationContext(), "התחברת בהצלחה!", Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(getApplicationContext(), "Authentication failed.",
