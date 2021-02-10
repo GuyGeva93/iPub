@@ -28,6 +28,7 @@ public class AddPubRequest extends AppCompatActivity implements View.OnClickList
 
     }
 
+    // Initialize activity views
     private void initViews() {
         pubName = findViewById(R.id.addPubRequest_pubName);
         pubAddress = findViewById(R.id.addPubRequest_pubAddress);
@@ -37,10 +38,12 @@ public class AddPubRequest extends AppCompatActivity implements View.OnClickList
         btnSend = findViewById(R.id.addPubRequest_sendBtn);
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
 
+            // Checking that all the fields aren't empty and if so we are sending the request to our Email using JavaMailAPI
             case R.id.addPubRequest_sendBtn:
                 if(pubName.getText().toString().equals("") || pubAddress.getText().toString().equals("") ||
                 pubCity.getText().toString().equals("")){
@@ -74,6 +77,7 @@ public class AddPubRequest extends AppCompatActivity implements View.OnClickList
         startActivity(new Intent(AddPubRequest.this, MainActivity.class));
     }
 
+    // If the user mark that he is the owner of the pub, the Email field will be visible to make him admin user.
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){

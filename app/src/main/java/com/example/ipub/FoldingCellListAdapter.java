@@ -101,7 +101,7 @@ public class FoldingCellListAdapter extends ArrayAdapter<Pub> implements Filtera
 
             cell.setTag(viewHolder);
         } else {
-            // for existing cell set valid valid state(without animation)
+            // for existing cell set valid state(without animation)
             if (unfoldedIndexes.contains(position)) {
                 cell.unfold(true);
             } else {

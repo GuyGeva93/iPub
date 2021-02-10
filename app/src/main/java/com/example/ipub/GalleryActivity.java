@@ -51,6 +51,7 @@ public class GalleryActivity extends AppCompatActivity {
 
     }
 
+    // Downloading the pub's images from Firebase storage.
     private void downloadImages() {
 
         StorageReference MStorageRef = storageRef.child("images/" + pubName);
@@ -68,6 +69,8 @@ public class GalleryActivity extends AppCompatActivity {
                                         public void onSuccess(Uri uri) {
                                             int i = 0;
                                             tempUriString = uri.toString();
+                                            // URI: ביטוי המזהה נתיב למקור מידע (Resource) באופן חד חד ערכי.
+                                            // ה-URI מהווה בפועל הרחבה של URL, כך שניתן לזהות כל מקור מידע בעזרתו ולא רק דפי אינטרנט.
                                             URI tempURI = URI.create(tempUriString);
                                             String validURLString = tempURI.toASCIIString();
                                             uriList.add(validURLString);

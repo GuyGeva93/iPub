@@ -316,6 +316,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
 
         }
+
+        // When "add to favirites" clicked, checking if the pub is already exist in user's favorites list.
         for (final Pub pub : pub_list) {
             pub.setBtnAddToFavorites(new View.OnClickListener() {
                 @Override
@@ -328,6 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
 
+                    // If it's doesn't exist, adding to favorites.
                     if (flag == 0) {
                         FavoritesList.add(pub);
                         ArrayList<Object> TempObjList = new ArrayList<Object>();
@@ -355,6 +358,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // set on click listener to start comments activity
         for (final Pub pub : pub_list) {
             pub.setBtnComments(new View.OnClickListener() {
                 @Override
@@ -366,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
         }
 
+        // Setting on click listener to start gallery activity.
         for (final Pub pub : pub_list) {
             pub.setBtnGallery(new View.OnClickListener() {
                 @Override
@@ -455,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         theListView.setAdapter(adapter);
     }
 
-    // next three methods to calculate the distance between user and pubs
+    // calculating the distance between user and pubs
     public double getKilometers(double lat1, double long1, double lat2, double long2) {
         double PI_RAD = Math.PI / 180.0;
         double phi1 = lat1 * PI_RAD;
@@ -493,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
             } else {
-                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "אנא הפעל את מיקום המכשיר", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
@@ -703,6 +708,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
 
+        // If manager is logged in, show update pub and signout items.
         if(mAuth.getCurrentUser() != null){
             MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_update_pub);
             menuItem.setVisible(true);
@@ -710,7 +716,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             menuItem1.setVisible(true);
             MenuItem menuItem2 = navigationView.getMenu().findItem(R.id.nav_admin_login);
             menuItem2.setVisible(false);
-
 
         }
     }

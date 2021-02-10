@@ -33,6 +33,7 @@ public class AdminLogin extends AppCompatActivity implements View.OnClickListene
         admin_forgot_password.setOnClickListener(this);
     }
 
+    // Initialize activity views
     private void initViews() {
         userEmail = findViewById(R.id.admin_email);
         userPass = findViewById(R.id.admin_password);
@@ -45,6 +46,7 @@ public class AdminLogin extends AppCompatActivity implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
 
+
             case R.id.admin_btn_login:
                 login();
                 break;
@@ -54,6 +56,7 @@ public class AdminLogin extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    // Admin login function using email and password
     private void login() {
         mAuth.signInWithEmailAndPassword(userEmail.getText().toString(), userPass.getText().toString())
                 .addOnCompleteListener(AdminLogin.this, new OnCompleteListener<AuthResult>() {
@@ -66,8 +69,7 @@ public class AdminLogin extends AppCompatActivity implements View.OnClickListene
                             Toast.makeText(getApplicationContext(), "התחברת בהצלחה!", Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "ההתחברות נכשלה, בדוק את הפרטים שהזנת", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

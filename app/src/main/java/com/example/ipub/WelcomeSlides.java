@@ -65,7 +65,7 @@ public class WelcomeSlides extends AppCompatActivity {
         });
 
     }
-
+    // Setting the slides list , adding descriptions and images resources.
     private void setupWelcomeSlidesItems() {
 
         List<WelcomeSlidesItem> welcomeSlidesItems = new ArrayList<>();
@@ -109,6 +109,7 @@ public class WelcomeSlides extends AppCompatActivity {
 
     }
 
+    // setting up grey dots as the number of the slides in the list.
     private void setupSlidesIndicators() {
         ImageView[] indicators = new ImageView[welcomeSlidesAdapter.getItemCount()];
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -124,6 +125,7 @@ public class WelcomeSlides extends AppCompatActivity {
         }
     }
 
+    // setting a blue dot on the current slide showing
     private void setCurrentSlideIndicator(int index) {
         int childCount = layoutSlidesIndicators.getChildCount();
         for (int i = 0; i < childCount; i++) {

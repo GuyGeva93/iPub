@@ -27,6 +27,7 @@ public class AdminRequest extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // Initialize activity views
     private void initViews() {
         admin_request_name = findViewById(R.id.admin_request_name);
         admin_request_pub_name = findViewById(R.id.admin_request_pub_name);

@@ -92,6 +92,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
 
     private void initListView() {
 
+        // Setting on click listener to make phone call.
         for (final Pub pub : FavoritesList) {
             pub.setRequestBtnClickListener(new View.OnClickListener() {
                 @Override
@@ -101,6 +102,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
+        // Setting on click listener to browse website page.
         for (final Pub pub : FavoritesList) {
             pub.setBtnGoToWebsite(new View.OnClickListener() {
                 @Override
@@ -110,6 +112,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
+        // Setting on click listener to start navigation to the pub.
         for (final Pub pub : FavoritesList) {
             pub.setBtnNavigateTopub(new View.OnClickListener() {
                 @Override
@@ -120,6 +123,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
 
         }
 
+        // // Setting on click listener to delete pub from favorites list.
         for (final Pub pub : FavoritesList) {
             pub.setBtnAddToFavorites(new View.OnClickListener() {
                 @Override
@@ -138,6 +142,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
 
         }
 
+        // set on click listener to start comments activity
         for (final Pub pub : FavoritesList) {
             pub.setBtnComments(new View.OnClickListener() {
                 @Override
@@ -149,6 +154,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
+        // Setting on click listener to start gallery activity.
         for (final Pub pub : FavoritesList) {
             pub.setBtnGallery(new View.OnClickListener() {
                 @Override
@@ -160,6 +166,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
+        // Setting on click listener to rate the current pub.
         for (final Pub pub : FavoritesList) {
 
             pub.setBtnRatePub(new View.OnClickListener() {
@@ -176,7 +183,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
 
                     pubName.setText(pub.getName());
 
-
+                    // setting dialog window size and open it
                     dialog.show();
                     Display display = getWindowManager().getDefaultDisplay();
                     Point size = new Point();
@@ -188,11 +195,12 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
                     height = Integer.valueOf((int) (height * 0.75));
                     window.setLayout(width, height);
 
+                    // Setting on click listener to send the comment after checking it's legal.
                     sendRate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
-                            millisecond = System.currentTimeMillis();
+                            millisecond = System.currentTimeMillis(); // Taking the timestamp of the current comment
                             ratingRef = database.getReference().child("Pubs").child(pub.getTitleName()).child("Ratings");
                             ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -201,6 +209,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
 
                                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                         long timeStamp = tinyDB.getLong(pub.getTitleName(), 0);
+                                        // Checking if the user has already rated this pub.
                                         if (String.valueOf(timeStamp).equals(snapshot.getKey())) {
                                             flag = true;
                                         }
@@ -279,6 +288,7 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    // Making a phone call. Automatically passing the number to the phone dialer
     private void makePhoneCall(String tel) {
         if (ContextCompat.checkSelfPermission(FavoritesActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(FavoritesActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
@@ -288,10 +298,12 @@ public class FavoritesActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    // Browsing the pub's website in the phone browser
     private void goToWebsite(String website) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(website)));
     }
 
+    // Navigating to the pub using Waze or Google Maps if Waze doesn't exist.
     private void navigateToPub(double lat, double lon) {
         String uri = "waze://?ll=" + lat + ", " + lon + "&navigate=yes";
         // try to navigate with Waze
